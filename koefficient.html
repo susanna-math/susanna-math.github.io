@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Домашнее задание: коэффициент</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Sans+Armenian:wght@400&display=swap">
+<style>
+/* Layout: одна колонка, сверху шапка и номера заданий, ниже одна карточка задания (как в учебнике) */
+:root{
+  --bg:#eef3fb; --card:#ffffff; --line:#d6dff0; --fg:#1f2a44; --muted:#5b6785;
+  --accent:#4553c9; --accent-soft:#e7e9fb; --ok:#2f7a45; --ok-soft:#e3f3e8;
+  --bad:#c0392b; --bad-soft:#fbe7e4; --warn:#a86a00; --warn-soft:#fdf1d8;
+  --lav:#efeafc; --hy:#5f8f73; --chip:#f3f5fb;
+  --f-ui:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-math:"PT Serif",Georgia,"Times New Roman",serif;
+  --f-hy:"Noto Sans Armenian","Golos Text",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#161b2a; --card:#1f2537; --line:#343c55; --fg:#e7ebf7; --muted:#a3acc6;
+  --accent:#8d97ff; --accent-soft:#2b3157; --ok:#6fcf8c; --ok-soft:#1f3a2a;
+  --bad:#ff8a7a; --bad-soft:#41231f; --warn:#f2bf5a; --warn-soft:#3d3018;
+  --lav:#272642; --hy:#8fbf9f; --chip:#262d42; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#161b2a; --card:#1f2537; --line:#343c55; --fg:#e7ebf7; --muted:#a3acc6;
+  --accent:#8d97ff; --accent-soft:#2b3157; --ok:#6fcf8c; --ok-soft:#1f3a2a;
+  --bad:#ff8a7a; --bad-soft:#41231f; --warn:#f2bf5a; --warn-soft:#3d3018;
+  --lav:#272642; --hy:#8fbf9f; --chip:#262d42; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-ui);font-size:16px;line-height:1.5}
+.wrap{max-width:860px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+h1{font-size:1.5rem;margin:0;text-wrap:balance;line-height:1.25}
+.hy-title{color:var(--hy);font-family:var(--f-hy);font-size:.9rem;opacity:.85}
+.top{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.row.between{justify-content:space-between}
+label.name{display:flex;gap:8px;align-items:center;font-weight:500}
+input[type=text]{font:inherit;color:var(--fg);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;min-width:0}
+input[type=text]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+#studentName{width:220px;max-width:100%}
+.stats{font-size:.92rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.stats b{color:var(--fg)}
+.bar{height:8px;background:var(--chip);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--ok);transition:width .3s}
+.levels{display:flex;flex-direction:column;gap:8px}
+.lvlrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.lvlrow .lbl{font-size:.8rem;color:var(--muted);width:92px;flex:none}
+.dots{display:flex;flex-wrap:wrap;gap:6px}
+.dot{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line);background:var(--chip);color:var(--fg);font:600 .82rem var(--f-ui);cursor:pointer;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.dot.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+.dot.late{background:var(--warn);border-color:var(--warn);color:#fff}
+.dot.bad{background:var(--bad);border-color:var(--bad);color:#fff}
+.dot.cur{outline:3px solid var(--accent);outline-offset:2px}
+.dot:focus-visible,.btn:focus-visible,.opt:focus-visible,.key:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.78rem;color:var(--muted)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--c)}
+
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.card-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.card-h h2{margin:0;font-size:1.15rem;color:var(--accent)}
+.pill{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--warn-soft);color:var(--warn)}
+.pill.l1{background:var(--ok-soft);color:var(--ok)}
+.pill.l3{background:var(--lav);color:var(--accent)}
+.meta{font-size:.85rem;color:var(--muted);text-align:right}
+.meta .s-ok{color:var(--ok);font-weight:600}
+.meta .s-bad{color:var(--bad);font-weight:600}
+.q{font-size:1.12rem}
+.q-hy{font-family:var(--f-hy);font-size:.82rem;color:var(--hy);opacity:.9;margin-top:-6px}
+.m{font-family:var(--f-math);font-size:1.12em;white-space:nowrap}
+.m i{font-style:italic}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;font-size:.85em;line-height:1.1;margin:0 2px}
+.fr>span:first-child{border-bottom:1px solid currentColor;padding:0 2px}
+.answer{display:flex;flex-direction:column;gap:8px}
+#ans{width:280px;max-width:100%;font-family:var(--f-math);font-size:1.1rem}
+.keys{display:flex;flex-wrap:wrap;gap:6px}
+.key{font:500 .95rem var(--f-math);min-width:36px;padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:var(--chip);color:var(--fg);cursor:pointer}
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{font:inherit;text-align:left;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--card);color:var(--fg);cursor:pointer;min-width:0}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 .92rem var(--f-ui);padding:9px 16px;border-radius:10px;border:1px solid transparent;cursor:pointer;background:var(--chip);color:var(--fg)}
+.btn.primary{background:var(--accent);color:#fff}
+.btn.go{background:var(--ok);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.link{background:none;border:none;color:var(--accent);text-decoration:underline;font:inherit;font-size:.85rem;cursor:pointer;padding:0;align-self:flex-start}
+.fb{border-radius:10px;padding:10px 14px;font-weight:500}
+.fb.ok{background:var(--ok-soft);color:var(--ok)}
+.fb.bad{background:var(--bad-soft);color:var(--bad)}
+.fb small{display:block;font-weight:400;color:var(--fg);margin-top:2px}
+.sol{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.sol h3{margin:0;font-size:1rem;color:var(--accent)}
+.sol ol{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.sol .rule{background:var(--lav);border-radius:10px;padding:8px 12px;font-size:.95rem}
+.sol .final{font-weight:600}
+.confirm{background:var(--warn-soft);border-radius:10px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* итоги */
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:620px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tile{background:var(--chip);border-radius:12px;padding:10px 12px}
+.tile b{display:block;font-size:1.5rem;font-variant-numeric:tabular-nums}
+.tile span{font-size:.8rem;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem;min-width:560px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{font-size:.78rem;color:var(--muted);font-weight:600}
+td.n{font-variant-numeric:tabular-nums;width:34px}
+.tag{font-size:.78rem;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.late{background:var(--warn-soft);color:var(--warn)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.tag.none{background:var(--chip);color:var(--muted)}
+.wrongs{color:var(--bad);font-family:var(--f-math)}
+textarea{width:100%;min-height:140px;font:.85rem/1.4 ui-monospace,Menlo,monospace;color:var(--fg);background:var(--chip);border:1px solid var(--line);border-radius:10px;padding:10px}
+.note{font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="row between">
+      <div>
+        <h1>Домашнее задание: буквенное выражение, коэффициент, степень буквы</h1>
+        <div class="hy-title">Տառային արտահայտություն, գործակից, տառի աստիճան</div>
+      </div>
+    </div>
+    <div class="row between">
+      <label class="name" for="studentName">Имя и фамилия: <input type="text" id="studentName" placeholder="напиши своё имя" autocomplete="off"></label>
+      <button class="btn" id="hyToggle" type="button">Перевод: вкл</button>
+    </div>
+    <div class="stats" id="stats"></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="levels" id="levels"></div>
+    <div class="legend">
+      <span style="--c:var(--ok)">верно с первой попытки</span>
+      <span style="--c:var(--warn)">верно, но после ошибки или решения</span>
+      <span style="--c:var(--bad)">пока неверно</span>
+      <span style="--c:var(--chip)">не начато</span>
+    </div>
+  </header>
+
+  <section class="card" id="taskView" aria-live="polite"></section>
+
+  <section class="card" id="resultView" hidden></section>
+
+  <div class="btns">
+    <button class="btn" id="toResults" type="button">📋 Итоги для учителя</button>
+  </div>
+</div>
+
+<script>
+/* ---------- помощники для записи формул ---------- */
+const M = s => `<span class="m">${s}</span>`;
+const fr = (a,b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+
+/* type: num — число; part — буквенная часть; mono — выражение целиком; choice — выбор */
+const TASKS = [
+/* ---------- Уровень 1 ---------- */
+{lvl:1,type:'choice',
+ q:'Какое из выражений является <b>буквенным</b>?',
+ hy:'Արտահայտություններից ո՞րն է տառային:',
+ opts:[M('5 + 7'),M('3 · 8 − 2'),M('4<i>a</i> + 1'),M('12 : 3')],ans:2,
+ sol:`<ol><li>Буквенное выражение — это выражение, в котором есть хотя бы одна буква.</li><li>В выражениях ${M('5 + 7')}, ${M('3 · 8 − 2')}, ${M('12 : 3')} только числа — это числовые выражения.</li><li>В ${M('4<i>a</i> + 1')} есть буква ${M('<i>a</i>')}.</li></ol><p class="final">Ответ: ${M('4<i>a</i> + 1')}</p>`},
+{lvl:1,type:'num',
+ q:`Найди коэффициент выражения ${M('7<i>a</i>')}.`,hy:'Գտի՛ր արտահայտության գործակիցը:',ans:7,
+ traps:{},
+ sol:`<div class="rule">Коэффициент — это число, которое стоит перед буквенной частью.</div><ol><li>В ${M('7<i>a</i>')} перед буквой стоит число 7.</li></ol><p class="final">Ответ: 7</p>`},
+{lvl:1,type:'num',
+ q:`Найди коэффициент выражения ${M('−5<i>xy</i>')}.`,hy:'Գտի՛ր արտահայտության գործակիցը:',ans:-5,
+ traps:{'5':'Знак «минус» тоже входит в коэффициент.'},
+ sol:`<ol><li>Перед буквами стоит число −5 вместе со знаком.</li><li>Знак всегда входит в коэффициент.</li></ol><p class="final">Ответ: −5</p>`},
+{lvl:1,type:'num',
+ q:`Найди коэффициент выражения ${M('<i>b</i>')}.`,hy:'Գտի՛ր արտահայտության գործակիցը:',ans:1,
+ traps:{'0':'Если перед буквой нет числа, коэффициент равен 1, а не 0.'},
+ sol:`<div class="rule">Если число перед буквой не написано, коэффициент равен 1: ${M('<i>b</i> = 1 · <i>b</i>')}.</div><p class="final">Ответ: 1</p>`},
+{lvl:1,type:'num',
+ q:`Найди коэффициент выражения ${M('−<i>m</i>')}.`,hy:'Գտի՛ր արտահայտության գործակիցը:',ans:-1,
+ traps:{'1':'Не забудь знак «минус».','0':'Если числа нет, подразумевается 1. А здесь ещё и знак «минус».'},
+ sol:`<ol><li>${M('−<i>m</i> = −1 · <i>m</i>')}.</li><li>Число перед буквой: −1.</li></ol><p class="final">Ответ: −1</p>`},
+{lvl:1,type:'part',
+ q:`Запиши буквенную часть выражения ${M('8<i>ab</i>')}.`,hy:'Գրի՛ր արտահայտության տառային մասը:',ans:'ab',
+ sol:`<div class="rule">Буквенная часть — это все буквы выражения (со своими степенями), без числа.</div><ol><li>${M('8<i>ab</i>')}: число 8 — коэффициент, ${M('<i>ab</i>')} — буквенная часть.</li></ol><p class="final">Ответ: ${M('<i>ab</i>')}</p>`},
+{lvl:1,type:'num',
+ q:`Найди степень буквы ${M('<i>x</i>')} в выражении ${M('3<i>x</i><sup>4</sup>')}.`,hy:'Գտի՛ր x տառի աստիճանը:',ans:4,
+ traps:{'3':'3 — это коэффициент. Степень — маленькое число вверху справа от буквы.'},
+ sol:`<div class="rule">Степень буквы — маленькое число вверху справа от неё (показатель).</div><ol><li>У ${M('<i>x</i>')} вверху стоит 4.</li></ol><p class="final">Ответ: 4</p>`},
+{lvl:1,type:'num',
+ q:`Найди степень буквы ${M('<i>a</i>')} в выражении ${M('6<i>a</i>')}.`,hy:'Գտի՛ր a տառի աստիճանը:',ans:1,
+ traps:{'0':'Если степень не написана, она равна 1, а не 0.','6':'6 — это коэффициент, а не степень.'},
+ sol:`<div class="rule">Если степень не написана, она равна 1: ${M('<i>a</i> = <i>a</i><sup>1</sup>')}.</div><p class="final">Ответ: 1</p>`},
+{lvl:1,type:'num',
+ q:`Найди значение выражения ${M('3<i>a</i>')} при ${M('<i>a</i> = 5')}.`,hy:'Գտի՛ր արտահայտության արժեքը, երբ a = 5:',ans:15,
+ traps:{'35':'3a означает 3 · a, то есть умножение, а не число 35.','8':'Между 3 и a стоит знак умножения, а не сложения.'},
+ sol:`<ol><li>${M('3<i>a</i>')} — это ${M('3 · <i>a</i>')}.</li><li>Подставим 5: ${M('3 · 5 = 15')}.</li></ol><p class="final">Ответ: 15</p>`},
+{lvl:1,type:'choice',
+ q:`В выражении ${M('9<i>c</i><sup>2</sup>')} число 9 — это…`,hy:'Այս արտահայտության մեջ 9 թիվը…',
+ opts:['буквенная часть','коэффициент','степень буквы','значение выражения'],ans:1,
+ sol:`<ol><li>Число перед буквенной частью — коэффициент.</li><li>2 — степень буквы ${M('<i>c</i>')}, ${M('<i>c</i><sup>2</sup>')} — буквенная часть.</li></ol><p class="final">Ответ: коэффициент</p>`},
+
+/* ---------- Уровень 2 ---------- */
+{lvl:2,type:'num',
+ q:`Упрости выражение ${M('2<i>a</i> · 5<i>b</i>')} и найди его коэффициент.`,hy:'Պարզեցրո՛ւ արտահայտությունը և գտի՛ր գործակիցը:',ans:10,
+ traps:{'7':'Числа здесь нужно умножить, а не сложить.','2':'Нужно перемножить все числа: 2 и 5.','5':'Нужно перемножить все числа: 2 и 5.'},
+ sol:`<div class="rule">Чтобы упростить произведение, перемножаем числа отдельно и буквы отдельно.</div><ol><li>Числа: ${M('2 · 5 = 10')}.</li><li>Буквы: ${M('<i>a</i> · <i>b</i> = <i>ab</i>')}.</li><li>${M('2<i>a</i> · 5<i>b</i> = 10<i>ab</i>')}.</li></ol><p class="final">Ответ: 10</p>`},
+{lvl:2,type:'num',
+ q:`Упрости выражение ${M('−3<i>x</i> · 4<i>y</i>')} и найди его коэффициент.`,hy:'Պարզեցրո՛ւ արտահայտությունը և գտի՛ր գործակիցը:',ans:-12,
+ traps:{'12':'Минус умножить на плюс даёт минус.','1':'Числа нужно умножить: −3 · 4.'},
+ sol:`<ol><li>${M('−3 · 4 = −12')} (минус на плюс даёт минус).</li><li>${M('−3<i>x</i> · 4<i>y</i> = −12<i>xy</i>')}.</li></ol><p class="final">Ответ: −12</p>`},
+{lvl:2,type:'part',
+ q:`Упрости выражение ${M('4<i>a</i> · 3<i>a</i>')} и запиши его буквенную часть.`,hy:'Պարզեցրո՛ւ և գրի՛ր տառային մասը:',ans:'a^2',
+ sol:`<ol><li>Числа: ${M('4 · 3 = 12')}.</li><li>Буквы: ${M('<i>a</i> · <i>a</i> = <i>a</i><sup>2</sup>')}.</li><li>${M('4<i>a</i> · 3<i>a</i> = 12<i>a</i><sup>2</sup>')}.</li></ol><p class="final">Ответ: ${M('<i>a</i><sup>2</sup>')}</p>`},
+{lvl:2,type:'num',
+ q:`Найди коэффициент выражения ${M(fr(2,3)+'<i>m</i>')}.`,hy:'Գտի՛ր արտահայտության գործակիցը:',ans:2/3,
+ traps:{'2':'Коэффициент — вся дробь, а не только числитель.','3':'Коэффициент — вся дробь.'},
+ sol:`<ol><li>Перед буквой стоит дробь ${M(fr(2,3))}. Это и есть коэффициент.</li><li>Ответ записывается так: 2/3.</li></ol><p class="final">Ответ: 2/3</p>`},
+{lvl:2,type:'num',
+ q:`Найди степень буквы ${M('<i>y</i>')} в выражении ${M('5<i>x</i><sup>2</sup><i>y</i><sup>3</sup>')}.`,hy:'Գտի՛ր y տառի աստիճանը:',ans:3,
+ traps:{'2':'2 — это степень буквы x, а спрашивают про y.','5':'5 — это коэффициент.'},
+ sol:`<ol><li>Смотрим только на букву ${M('<i>y</i>')}: ${M('<i>y</i><sup>3</sup>')}.</li></ol><p class="final">Ответ: 3</p>`},
+{lvl:2,type:'num',
+ q:`Упрости выражение ${M('<i>a</i><sup>2</sup> · <i>a</i><sup>3</sup>')} и найди степень буквы ${M('<i>a</i>')}.`,hy:'Պարզեցրո՛ւ և գտի՛ր a տառի աստիճանը:',ans:5,
+ traps:{'6':'При умножении одинаковых букв степени складываются, а не умножаются.'},
+ sol:`<div class="rule">При умножении одинаковых букв степени складываются: ${M('<i>a</i><sup>m</sup> · <i>a</i><sup>n</sup> = <i>a</i><sup>m+n</sup>')}.</div><ol><li>${M('<i>a</i><sup>2</sup> · <i>a</i><sup>3</sup> = <i>a</i><sup>2+3</sup> = <i>a</i><sup>5</sup>')}.</li></ol><p class="final">Ответ: 5</p>`},
+{lvl:2,type:'num',
+ q:`В выражении ${M('6 + 3<i>x</i> − 5<i>x</i><sup>2</sup>')} найди коэффициент при ${M('<i>x</i><sup>2</sup>')}.`,hy:'Գտի՛ր x²-ի գործակիցը:',ans:-5,
+ traps:{'5':'Перед 5x² стоит знак «минус». Он входит в коэффициент.','3':'3 — коэффициент при x, а спрашивают про x².'},
+ sol:`<ol><li>Найдём слагаемое с ${M('<i>x</i><sup>2</sup>')}: это ${M('−5<i>x</i><sup>2</sup>')}.</li><li>Число перед ${M('<i>x</i><sup>2</sup>')} вместе со знаком: −5.</li></ol><p class="final">Ответ: −5</p>`},
+{lvl:2,type:'num',
+ q:`Найди значение выражения ${M('2<i>x</i><sup>2</sup>')} при ${M('<i>x</i> = 3')}.`,hy:'Գտի՛ր արտահայտության արժեքը, երբ x = 3:',ans:18,
+ traps:{'36':'Сначала возводим в квадрат только x: 3² = 9, потом умножаем на 2.','12':'x² — это x · x, а не x · 2.'},
+ sol:`<div class="rule">Порядок действий: сначала степень, потом умножение.</div><ol><li>${M('3<sup>2</sup> = 9')}.</li><li>${M('2 · 9 = 18')}.</li></ol><p class="final">Ответ: 18</p>`},
+{lvl:2,type:'choice',
+ q:'У какой пары выражений <b>одинаковая буквенная часть</b>?',hy:'Ո՞ր զույգ արտահայտություններն ունեն նույն տառային մասը:',
+ opts:[M('3<i>ab</i>')+' и '+M('3<i>a</i>'),M('5<i>x</i><sup>2</sup><i>y</i>')+' и '+M('−2<i>x</i><sup>2</sup><i>y</i>'),M('4<i>m</i><sup>2</sup>')+' и '+M('4<i>m</i>'),M('7<i>ab</i><sup>2</sup>')+' и '+M('7<i>a</i><sup>2</sup><i>b</i>')],ans:1,
+ sol:`<ol><li>Буквенная часть одинакова, если совпадают все буквы и их степени. Коэффициенты могут быть разными.</li><li>${M('5<i>x</i><sup>2</sup><i>y</i>')} и ${M('−2<i>x</i><sup>2</sup><i>y</i>')}: у обоих ${M('<i>x</i><sup>2</sup><i>y</i>')}.</li><li>В последней паре степени у букв разные: ${M('<i>ab</i><sup>2</sup>')} и ${M('<i>a</i><sup>2</sup><i>b</i>')}.</li></ol><p class="final">Ответ: ${M('5<i>x</i><sup>2</sup><i>y</i>')} и ${M('−2<i>x</i><sup>2</sup><i>y</i>')}</p>`},
+{lvl:2,type:'num',
+ q:`Найди значение выражения ${M('−<i>a</i><sup>2</sup>')} при ${M('<i>a</i> = 4')}.`,hy:'Գտի՛ր արտահայտության արժեքը, երբ a = 4:',ans:-16,
+ traps:{'16':'Минус стоит перед a², в квадрат возводится только 4: −(4²) = −16.','-8':'a² — это a · a, а не a · 2.'},
+ sol:`<ol><li>${M('−<i>a</i><sup>2</sup> = −1 · <i>a</i><sup>2</sup>')}.</li><li>${M('4<sup>2</sup> = 16')}, затем ${M('−1 · 16 = −16')}.</li></ol><p class="final">Ответ: −16</p>`},
+
+/* ---------- Уровень 3 ---------- */
+{lvl:3,type:'num',
+ q:`Упрости выражение ${M('−2<i>a</i> · (−3<i>b</i>) · <i>c</i>')} и найди его коэффициент.`,hy:'Պարզեցրո՛ւ արտահայտությունը և գտի՛ր գործակիցը:',ans:6,
+ traps:{'-6':'Минус на минус даёт плюс.','-5':'Числа нужно умножить, а не сложить.'},
+ sol:`<ol><li>Числа: ${M('(−2) · (−3) · 1 = 6')} (два минуса дают плюс).</li><li>Буквы: ${M('<i>abc</i>')}.</li><li>${M('6<i>abc</i>')}.</li></ol><p class="final">Ответ: 6</p>`},
+{lvl:3,type:'part',
+ q:`Упрости выражение ${M('−0,5<i>x</i><sup>2</sup><i>y</i> · 4<i>xy</i><sup>3</sup>')} и запиши его буквенную часть.`,hy:'Պարզեցրո՛ւ և գրի՛ր տառային մասը:',ans:'x^3y^4',
+ sol:`<ol><li>Числа: ${M('−0,5 · 4 = −2')}.</li><li>${M('<i>x</i><sup>2</sup> · <i>x</i> = <i>x</i><sup>3</sup>')}, ${M('<i>y</i> · <i>y</i><sup>3</sup> = <i>y</i><sup>4</sup>')}.</li><li>${M('−2<i>x</i><sup>3</sup><i>y</i><sup>4</sup>')}.</li></ol><p class="final">Ответ: ${M('<i>x</i><sup>3</sup><i>y</i><sup>4</sup>')}</p>`},
+{lvl:3,type:'num',
+ q:`Упрости выражение ${M('0,5<i>x</i> · (−6) · <i>xy</i>')} и найди его коэффициент.`,hy:'Պարզեցրո՛ւ արտահայտությունը և գտի՛ր գործակիցը:',ans:-3,
+ traps:{'3':'Один минус в произведении — ответ отрицательный.'},
+ sol:`<ol><li>Числа: ${M('0,5 · (−6) = −3')}.</li><li>Буквы: ${M('<i>x</i> · <i>xy</i> = <i>x</i><sup>2</sup><i>y</i>')}.</li><li>${M('−3<i>x</i><sup>2</sup><i>y</i>')}.</li></ol><p class="final">Ответ: −3</p>`},
+{lvl:3,type:'num',
+ q:`Упрости выражение ${M('2<i>ab</i><sup>2</sup> · 3<i>a</i><sup>2</sup><i>b</i><sup>4</sup>')} и найди степень буквы ${M('<i>b</i>')}.`,hy:'Պարզեցրո՛ւ և գտի՛ր b տառի աստիճանը:',ans:6,
+ traps:{'8':'Степени одинаковых букв складываются, а не умножаются.','3':'3 — это степень буквы a. Спрашивают про b.','4':'Нужно учесть b в обоих множителях: b² и b⁴.'},
+ sol:`<ol><li>${M('<i>b</i><sup>2</sup> · <i>b</i><sup>4</sup> = <i>b</i><sup>2+4</sup> = <i>b</i><sup>6</sup>')}.</li><li>Всё выражение: ${M('6<i>a</i><sup>3</sup><i>b</i><sup>6</sup>')}.</li></ol><p class="final">Ответ: 6</p>`},
+{lvl:3,type:'num',
+ q:`Упрости выражение ${M('−<i>x</i> · (−<i>y</i>) · (−<i>z</i>)')} и найди его коэффициент.`,hy:'Պարզեցրո՛ւ արտահայտությունը և գտի՛ր գործակիցը:',ans:-1,
+ traps:{'1':'Три минуса: (−1)·(−1)·(−1) = −1.','-3':'Каждый множитель — это −1, их нужно умножить, а не сложить.','3':'Каждый множитель — это −1, их нужно умножить.'},
+ sol:`<div class="rule">Нечётное число минусов в произведении даёт минус, чётное — плюс.</div><ol><li>${M('(−1) · (−1) · (−1) = −1')}.</li><li>${M('−<i>xyz</i>')}.</li></ol><p class="final">Ответ: −1</p>`},
+{lvl:3,type:'num',
+ q:`Найди значение выражения ${M('3<i>a</i><sup>2</sup><i>b</i>')} при ${M('<i>a</i> = −2')}, ${M('<i>b</i> = 5')}.`,hy:'Գտի՛ր արտահայտության արժեքը, երբ a = −2, b = 5:',ans:60,
+ traps:{'-60':'(−2)² = 4: квадрат отрицательного числа положителен.','-30':'a² — это (−2)·(−2) = 4, а не −2·2.','30':'a² = (−2)·(−2) = 4, а не 2.'},
+ sol:`<ol><li>${M('<i>a</i><sup>2</sup> = (−2)<sup>2</sup> = 4')}.</li><li>${M('3 · 4 · 5 = 60')}.</li></ol><p class="final">Ответ: 60</p>`},
+{lvl:3,type:'num',
+ q:`Упрости выражение ${M(fr(3,4)+'<i>a</i> · 8<i>b</i>')} и найди его коэффициент.`,hy:'Պարզեցրո՛ւ արտահայտությունը և գտի՛ր գործակիցը:',ans:6,
+ traps:{'24':'3/4 · 8: сначала 8 : 4 = 2, потом 2 · 3 = 6.'},
+ sol:`<ol><li>${M(fr(3,4)+' · 8 = '+fr('3 · 8',4)+' = '+fr(24,4)+' = 6')}.</li><li>${M('6<i>ab</i>')}.</li></ol><p class="final">Ответ: 6</p>`},
+{lvl:3,type:'mono',
+ q:`Запиши выражение, у которого коэффициент равен ${M('−7')}, а буквенная часть ${M('<i>a</i><sup>3</sup><i>b</i>')}.`,hy:'Գրի՛ր արտահայտություն, որի գործակիցը −7 է, իսկ տառային մասը՝ a³b:',ans:{c:-7,l:'a^3b'},
+ sol:`<ol><li>Пишем сначала коэффициент, потом буквенную часть.</li><li>${M('−7<i>a</i><sup>3</sup><i>b</i>')}.</li></ol><p class="final">Ответ: ${M('−7<i>a</i><sup>3</sup><i>b</i>')}</p>`},
+{lvl:3,type:'num',
+ q:`Какое число нужно поставить вместо ${M('?')}, чтобы было верно: ${M('<i>a</i><sup>?</sup> · <i>a</i><sup>2</sup> = <i>a</i><sup>7</sup>')}?`,hy:'Ո՞ր թիվը պետք է գրել հարցականի փոխարեն:',ans:5,
+ traps:{'3.5':'При умножении степени складываются: ? + 2 = 7.','9':'При умножении степени складываются: ? + 2 = 7, значит ? = 7 − 2.'},
+ sol:`<ol><li>Степени складываются: ${M('? + 2 = 7')}.</li><li>${M('? = 7 − 2 = 5')}.</li></ol><p class="final">Ответ: 5</p>`},
+{lvl:3,type:'choice',
+ q:`Ученик сказал: «Коэффициент выражения ${M('−<i>a</i><sup>2</sup><i>b</i>')} равен 2». Прав ли он?`,hy:'Աշակերտն ասաց, որ այս արտահայտության գործակիցը 2 է: Ճի՞շտ է նա:',
+ opts:['да, коэффициент 2','нет, коэффициент −1','нет, коэффициент 1','нет, коэффициент −2'],ans:1,
+ sol:`<ol><li>2 — это степень буквы ${M('<i>a</i>')}, а не коэффициент.</li><li>${M('−<i>a</i><sup>2</sup><i>b</i> = −1 · <i>a</i><sup>2</sup><i>b</i>')}, коэффициент −1.</li></ol><p class="final">Ответ: нет, коэффициент −1</p>`},
+];
+
+const LVL = {1:'Уровень 1 · лёгкий',2:'Уровень 2 · средний',3:'Уровень 3 · сложный'};
+const KEY = 'dz-bukv-koef-v1';
+
+/* ---------- состояние ---------- */
+let S = load();
+function blank(){return {name:'',hy:true,cur:0,t:TASKS.map(()=>({att:[],solved:false,sawSol:false,solAfterSol:false}))}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.t&&s.t.length===TASKS.length)return s}catch(e){}return blank()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- разбор ответов ---------- */
+const SUP={'⁰':'0','¹':'1','²':'2','³':'3','⁴':'4','⁵':'5','⁶':'6','⁷':'7','⁸':'8','⁹':'9'};
+const CYR={'а':'a','б':'b','с':'c','х':'x','у':'y','м':'m','н':'n','к':'k','р':'p','е':'e','о':'o','т':'t'};
+function norm(s){
+  s=s.toLowerCase().replace(/[−–—]/g,'-').replace(/\s+/g,'').replace(/[·*×]/g,'');
+  s=s.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]+/g,m=>'^'+[...m].map(c=>SUP[c]).join(''));
+  s=[...s].map(c=>CYR[c]||c).join('');
+  return s.replace(/,/g,'.');
+}
+function parseNum(s){
+  s=norm(s).replace(/^\((.*)\)$/,'$1');
+  let m=s.match(/^([+-]?)(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)$/);
+  if(m){const d=+m[3];if(!d)return NaN;return (m[1]==='-'?-1:1)*(+m[2])/d}
+  if(/^[+-]?\d+(\.\d+)?$/.test(s))return +s;
+  return NaN;
+}
+function parseMono(s){
+  s=norm(s);
+  const m=s.match(/^([+-]?)(\d+(?:\.\d+)?(?:\/\d+)?)?((?:[a-z](?:\^\d+)?)*)$/);
+  if(!m||(!m[2]&&!m[3]))return null;
+  let c=m[2]?parseNum(m[2]):1; if(m[1]==='-')c=-c;
+  const L={}; (m[3].match(/[a-z](?:\^\d+)?/g)||[]).forEach(t=>{const e=t.length>1?+t.slice(2):1;L[t[0]]=(L[t[0]]||0)+e});
+  return {c,L,hasCoef:!!m[2]||m[1]==='-'};
+}
+const sameL=(A,B)=>{const k=new Set([...Object.keys(A),...Object.keys(B)]);for(const x of k)if((A[x]||0)!==(B[x]||0))return false;return true};
+
+function check(t,raw){
+  if(t.type==='num'){
+    const v=parseNum(raw);
+    if(isNaN(v))return {invalid:'Напиши ответ числом, например −7, 0,5 или 4/9.'};
+    const ok=Math.abs(v-t.ans)<1e-9;
+    let tip=''; if(!ok&&t.traps)for(const k in t.traps)if(Math.abs(parseNum(k)-v)<1e-9)tip=t.traps[k];
+    return {ok,tip};
+  }
+  if(t.type==='part'){
+    const p=parseMono(raw); if(!p)return {invalid:'Напиши буквы латиницей, степени — кнопками ² ³ или знаком ^. Например: a^2b.'};
+    const want=parseMono(t.ans);
+    if(p.hasCoef&&sameL(p.L,want.L))return {ok:false,tip:'Буквенная часть пишется без числа (без коэффициента).'};
+    const ok=!p.hasCoef&&sameL(p.L,want.L);
+    let tip=''; if(!ok){
+      const kp=Object.keys(p.L).sort().join(''),kw=Object.keys(want.L).sort().join('');
+      tip=kp===kw?'Буквы верные, проверь их степени.':'Проверь, какие буквы входят в выражение.';
+      if(p.hasCoef)tip='Буквенная часть пишется без числа. '+tip;
+    }
+    return {ok,tip};
+  }
+  if(t.type==='mono'){
+    const p=parseMono(raw); if(!p)return {invalid:'Напиши выражение: сначала число, потом буквы. Например: 5x^2y.'};
+    const w=parseMono(t.ans.l);
+    const cOk=Math.abs(p.c-t.ans.c)<1e-9, lOk=sameL(p.L,w.L);
+    return {ok:cOk&&lOk,tip:cOk&&!lOk?'Коэффициент верный, проверь буквенную часть и степени.':(!cOk&&lOk?'Буквенная часть верная, проверь коэффициент (и его знак).':'')};
+  }
+}
+
+/* ---------- отрисовка ---------- */
+const $=id=>document.getElementById(id);
+let selOpt=null, showSol=false, confirmReset=false;
+
+function status(i){const s=S.t[i];
+  if(s.solved)return (s.att.length===1&&!s.solAfterSol)?'ok':'late';
+  if(s.att.length)return 'bad'; return 'none';}
+
+function renderTop(){
+  $('studentName').value=S.name;
+  $('hyToggle').textContent='Перевод: '+(S.hy?'вкл':'выкл');
+  document.querySelectorAll('.q-hy').forEach(e=>e.hidden=!S.hy);
+  let lv='';
+  [1,2,3].forEach(l=>{
+    lv+=`<div class="lvlrow"><span class="lbl">${LVL[l].split(' · ')[1]}</span><div class="dots">`;
+    TASKS.forEach((t,i)=>{if(t.lvl!==l)return;const st=status(i);
+      lv+=`<button type="button" class="dot ${st==='none'?'':st} ${i===S.cur?'cur':''}" data-i="${i}" aria-label="Задание ${i+1}">${i+1}</button>`});
+    lv+='</div></div>';
+  });
+  $('levels').innerHTML=lv;
+  const solved=S.t.filter(s=>s.solved).length, errs=S.t.reduce((a,s)=>a+s.att.filter(x=>!x.ok).length,0);
+  $('stats').innerHTML=`Решено: <b>${solved}</b> из ${TASKS.length} · неверных ответов: <b>${errs}</b>`;
+  $('barFill').style.width=(solved/TASKS.length*100)+'%';
+}
+
+function renderTask(fb){
+  const i=S.cur,t=TASKS[i],s=S.t[i];
+  const st=status(i);
+  const metaSt=s.solved?'<span class="s-ok">✓ уже решено</span>':(s.att.length?'<span class="s-bad">пока неверно</span>':'');
+  let ans='';
+  if(t.type==='choice'){
+    ans=`<div class="opts">${t.opts.map((o,k)=>{
+      let c=''; if(s.solved&&k===t.ans)c='right'; else if(fb&&fb.choice===k)c=fb.ok?'right':'wrong'; else if(selOpt===k)c='sel';
+      return `<button type="button" class="opt ${c}" data-k="${k}" ${s.solved?'disabled':''}>${o}</button>`}).join('')}</div>`;
+  }else{
+    const ph=t.type==='num'?'число, например −7 или 4/9':(t.type==='part'?'буквы, например a²b':'например 5x²y');
+    const keys=t.type==='num'?['−','/',',','(',')']:['²','³','^','−','/'];
+    ans=`<div class="answer"><input type="text" id="ans" placeholder="${ph}" autocomplete="off" spellcheck="false" ${s.solved?'disabled':''}>
+      <div class="keys">${keys.map(k=>`<button type="button" class="key" data-key="${k}" ${s.solved?'disabled':''}>${k}</button>`).join('')}</div></div>`;
+  }
+  let fbHtml='';
+  if(fb){
+    if(fb.invalid)fbHtml=`<div class="fb bad">Не могу прочитать ответ.<small>${fb.invalid}</small></div>`;
+    else if(fb.ok)fbHtml=`<div class="fb ok">Верно! Молодец.${s.solAfterSol?'<small>Задание засчитано после просмотра решения.</small>':''}</div>`;
+    else fbHtml=`<div class="fb bad">Неверно. Попробуй ещё раз или открой решение.${fb.tip?`<small>Подсказка: ${fb.tip}</small>`:''}</div>`;
+  }else if(s.solved){fbHtml=`<div class="fb ok">Задание решено. Твой ответ: <span class="m">${esc(s.att[s.att.length-1].v)}</span></div>`}
+  const canSol=s.att.length>0;
+  $('taskView').innerHTML=`
+    <div class="card-h">
+      <div><h2>✍ Задание ${i+1}</h2><span class="pill l${t.lvl}">${LVL[t.lvl]}</span></div>
+      <div class="meta">Задание ${i+1} из ${TASKS.length}${metaSt?' · '+metaSt:''}</div>
+    </div>
+    <div class="q">${t.q}</div>
+    <div class="q-hy" ${S.hy?'':'hidden'}>${t.hy}</div>
+    ${ans}
+    ${fbHtml}
+    <div class="btns">
+      <button type="button" class="btn" id="bPrev" ${i===0?'disabled':''}>← Назад</button>
+      <button type="button" class="btn primary" id="bCheck" ${s.solved?'disabled':''}>Проверить ответ</button>
+      <button type="button" class="btn" id="bSol" ${canSol?'':'disabled'} title="${canSol?'':'Сначала попробуй ответить'}">${showSol?'Скрыть решение':'Показать решение'}</button>
+      <button type="button" class="btn" id="bAgain" ${s.solved?'disabled':''}>↺ Повторить</button>
+      <button type="button" class="btn go" id="bNext" ${i===TASKS.length-1?'disabled':''}>Следующее задание →</button>
+    </div>
+    ${showSol?`<div class="sol"><h3>Разбор решения</h3>${t.sol}</div>`:''}
+    ${confirmReset?`<div class="confirm">Стереть все ответы и начать заново? <button type="button" class="btn" id="bResetYes">Да, начать заново</button><button type="button" class="btn" id="bResetNo">Отмена</button></div>`
+      :`<button type="button" class="link" id="bReset">↺ Пройти все задания заново</button>`}
+  `;
+  renderTop();
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+
+function go(i){S.cur=i;selOpt=null;showSol=false;confirmReset=false;save();$('resultView').hidden=true;$('taskView').hidden=false;renderTask();window.scrollTo({top:0,behavior:'smooth'})}
+
+function doCheck(){
+  const i=S.cur,t=TASKS[i],s=S.t[i]; if(s.solved)return;
+  let r,v;
+  if(t.type==='choice'){
+    if(selOpt===null){renderTask({invalid:'Выбери один из вариантов.'});return}
+    r={ok:selOpt===t.ans}; v=plain(t.opts[selOpt]); r.choice=selOpt;
+  }else{
+    v=$('ans').value.trim(); if(!v){renderTask({invalid:'Сначала впиши ответ.'});return}
+    r=check(t,v); if(r.invalid){renderTask(r);setTimeout(()=>{const a=$('ans');if(a){a.value=v;a.focus()}});return}
+  }
+  s.att.push({v,ok:r.ok});
+  if(r.ok){s.solved=true;if(s.sawSol)s.solAfterSol=true}
+  save(); renderTask(r);
+  if(!r.ok&&t.type!=='choice'){const a=$('ans');a.value=v;a.select()}
+}
+
+/* ---------- итоги ---------- */
+const SUPR={'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺'};
+function plain(html){
+  html=html.replace(/<sup>(.*?)<\/sup>/g,(_,d)=>[...d].map(c=>SUPR[c]||c).join(''))
+           .replace(/<span class="fr"><span>(.*?)<\/span><span>(.*?)<\/span><\/span>/g,'$1/$2');
+  const d=document.createElement('div');d.innerHTML=html;return d.textContent.replace(/\s+/g,' ').trim();
+}
+function stLabel(i){const s=S.t[i],st=status(i);
+  if(st==='ok')return ['ok','верно с 1-й попытки'];
+  if(st==='late')return ['late',s.solAfterSol?'верно после просмотра решения':`верно с ${s.att.length}-й попытки`];
+  if(st==='bad')return ['bad','не решено'];
+  return ['none','не начато'];}
+function summary(){
+  const first=S.t.filter((s,i)=>status(i)==='ok').length;
+  const solved=S.t.filter(s=>s.solved).length;
+  const errs=S.t.reduce((a,s)=>a+s.att.filter(x=>!x.ok).length,0);
+  const sol=S.t.filter(s=>s.sawSol).length;
+  const untouched=S.t.filter(s=>!s.att.length).length;
+  return {first,solved,errs,sol,untouched};
+}
+function reportText(){
+  const m=summary(), d=new Date();
+  let out=`Домашнее задание: буквенное выражение, коэффициент, степень буквы\nУченик: ${S.name||'(имя не указано)'}\nДата: ${d.toLocaleDateString('ru-RU')} ${d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'})}\n\n`;
+  out+=`Верно с первой попытки: ${m.first} из ${TASKS.length}\nРешено всего: ${m.solved} из ${TASKS.length}\nНеверных ответов: ${m.errs}\nОткрывал решение: ${m.sol} раз\nНе начато: ${m.untouched}\n\n`;
+  TASKS.forEach((t,i)=>{const [,lab]=stLabel(i),s=S.t[i];
+    const wr=s.att.filter(a=>!a.ok).map(a=>a.v);
+    out+=`${i+1}. ${lab}${wr.length?' — ошибки: '+wr.join('; '):''}${s.sawSol?' (смотрел решение)':''}\n   ${plain(t.q)}\n`});
+  return out;
+}
+function renderResults(){
+  const m=summary();
+  const rows=TASKS.map((t,i)=>{const [c,lab]=stLabel(i),s=S.t[i];
+    const wr=s.att.filter(a=>!a.ok).map(a=>esc(a.v));
+    return `<tr><td class="n">${i+1}</td><td>${t.q}</td><td>${wr.length?`<span class="wrongs">${wr.join('<br>')}</span>`:'—'}</td><td><span class="tag ${c}">${lab}</span>${s.sawSol?'<br><small class="note">смотрел решение</small>':''}</td></tr>`}).join('');
+  $('resultView').innerHTML=`
+    <div class="card-h"><div><h2>Итоги для учителя</h2><div class="note">Ученик: <b>${esc(S.name||'имя не указано')}</b></div></div></div>
+    <div class="tiles">
+      <div class="tile"><b>${m.first}</b><span>верно с первой попытки</span></div>
+      <div class="tile"><b>${m.solved}/${TASKS.length}</b><span>решено всего</span></div>
+      <div class="tile"><b>${m.errs}</b><span>неверных ответов</span></div>
+      <div class="tile"><b>${m.sol}</b><span>раз открывал решение</span></div>
+    </div>
+    <div class="tablewrap"><table><thead><tr><th>№</th><th>Задание</th><th>Неверные ответы ученика</th><th>Итог</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="note">Когда закончишь, нажми «Скопировать отчёт» и отправь его учителю в мессенджере.</div>
+    <div class="btns"><button type="button" class="btn primary" id="bCopy">Скопировать отчёт</button><button type="button" class="btn" id="bBack">← Вернуться к заданиям</button></div>
+    <textarea id="repText" readonly hidden></textarea>`;
+  $('taskView').hidden=true;$('resultView').hidden=false;window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------- события ---------- */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  if(b.classList.contains('dot'))return go(+b.dataset.i);
+  if(b.classList.contains('opt')){selOpt=+b.dataset.k;const s=S.t[S.cur];if(!s.solved)renderTask();return}
+  if(b.classList.contains('key')){const a=$('ans');if(!a)return;const k=b.dataset.key;const p=a.selectionStart??a.value.length,q=a.selectionEnd??p;
+    a.value=a.value.slice(0,p)+k+a.value.slice(q);a.focus();a.setSelectionRange(p+k.length,p+k.length);return}
+  switch(b.id){
+    case 'bPrev':return go(S.cur-1);
+    case 'bNext':return go(S.cur+1);
+    case 'bCheck':return doCheck();
+    case 'bSol':{showSol=!showSol;const s=S.t[S.cur];if(showSol&&!s.solved){s.sawSol=true}else if(showSol){s.sawSol=s.sawSol||false}save();
+      const keep=$('ans')?$('ans').value:'';renderTask();if($('ans')&&!S.t[S.cur].solved)$('ans').value=keep;return}
+    case 'bAgain':{selOpt=null;renderTask();const a=$('ans');if(a)a.focus();return}
+    case 'bReset':confirmReset=true;return renderTask();
+    case 'bResetNo':confirmReset=false;return renderTask();
+    case 'bResetYes':{const name=S.name,hy=S.hy;S=blank();S.name=name;S.hy=hy;save();return go(0)}
+    case 'hyToggle':S.hy=!S.hy;save();return renderTop();
+    case 'toResults':return renderResults();
+    case 'bBack':return go(S.cur);
+    case 'bCopy':{const txt=reportText(),ta=$('repText');ta.value=txt;
+      const done=()=>{b.textContent='Скопировано ✓';setTimeout(()=>b.textContent='Скопировать отчёт',2000)};
+      try{navigator.clipboard.writeText(txt).then(done,()=>{ta.hidden=false;ta.select();b.textContent='Выдели текст ниже и скопируй'})}
+      catch(err){ta.hidden=false;ta.select()}return}
+  }
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ans'){e.preventDefault();doCheck()}});
+$('studentName').addEventListener('input',e=>{S.name=e.target.value;save()});
+renderTask();
+</script>
+</body>
+</html>
