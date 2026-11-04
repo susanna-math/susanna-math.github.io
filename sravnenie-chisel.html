@@ -1,0 +1,438 @@
+<title>Сравнение чисел</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: one lesson page, menu on top, only the chosen section is shown below it */
+:root{
+  --bg:#f3f6fc; --surface:#ffffff; --sky:#e3edfa; --lav:#ecebfc;
+  --ink:#1d2742; --muted:#4a5573; --line:#cfd8ea;
+  --accent:#5a52c9; --accent-ink:#ffffff;
+  --sun:#fff0cf; --sun-ink:#8a5600; --good:#1d7f55; --good-bg:#e2f5ec; --bad:#b9382f; --bad-bg:#fbe7e5;
+  --display:"Lora", Georgia, "Times New Roman", serif;
+  --body:"Nunito", "Segoe UI", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141a2b; --surface:#1c2338; --sky:#22304d; --lav:#2a2a4d;
+  --ink:#eef1fa; --muted:#b5bdd3; --line:#34405e;
+  --accent:#a9a3ff; --accent-ink:#141a2b;
+  --sun:#3a3020; --sun-ink:#ffd27a; --good:#6fd6a5; --good-bg:#16352a; --bad:#ff9a90; --bad-bg:#3d1f1d; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141a2b; --surface:#1c2338; --sky:#22304d; --lav:#2a2a4d;
+  --ink:#eef1fa; --muted:#b5bdd3; --line:#34405e;
+  --accent:#a9a3ff; --accent-ink:#141a2b;
+  --sun:#3a3020; --sun-ink:#ffd27a; --good:#6fd6a5; --good-bg:#16352a; --bad:#ff9a90; --bad-bg:#3d1f1d; color-scheme:dark}
+
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6}
+.wrap{max-width:760px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.book{display:grid;gap:6px;margin-bottom:22px}
+.series{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+h1{font-family:var(--display);font-size:clamp(30px,6vw,42px);line-height:1.15;margin:0;text-wrap:balance}
+.author{font-family:var(--display);font-style:italic;font-size:17px;color:var(--muted)}
+.author b{color:var(--ink);font-weight:600}
+.task-src{margin-top:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;font-size:16px}
+.task-src .lbl{font-weight:800;color:var(--accent)}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 22px}
+nav button{font:inherit;font-size:15px;font-weight:700;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:999px;cursor:pointer}
+nav button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+nav button:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+section{display:grid;gap:18px}
+h2{font-family:var(--display);font-size:28px;margin:0;line-height:1.2;text-wrap:balance}
+h3{font-family:var(--display);font-size:21px;margin:6px 0 0}
+p{margin:0;max-width:65ch}
+.rule{background:var(--lav);border-radius:14px;padding:16px 18px;display:grid;gap:8px}
+.rule .tag{font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--accent)}
+.example{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;gap:10px}
+.step{display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start}
+.step .n{width:28px;height:28px;border-radius:50%;background:var(--sky);color:var(--accent);font-weight:800;display:grid;place-items:center;font-size:15px}
+.big{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums}
+.warn{border-left:4px solid var(--bad);background:var(--bad-bg);padding:12px 16px;border-radius:0 12px 12px 0}
+.note{color:var(--muted);font-size:15px}
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;margin:0 2px;font-variant-numeric:tabular-nums}
+.fr span:last-child{border-top:2px solid currentColor;padding-top:1px}
+.sign-table{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sign-table div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.sign-table .s{font-size:34px;font-weight:800;color:var(--accent);line-height:1}
+.digits{font-family:ui-monospace,"Cascadia Mono",Menlo,monospace;font-size:24px;letter-spacing:.06em}
+.digits .z{color:var(--accent);font-weight:800}
+
+/* compare cards */
+.cmp{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:12px}
+.cmp .head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cmp .num{font-weight:800;color:var(--muted);font-size:15px}
+.cmp .pair{display:flex;align-items:center;justify-content:center;gap:14px;font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;flex-wrap:wrap;min-height:60px}
+.slot{min-width:52px;height:52px;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-size:30px;color:var(--accent);font-weight:800}
+.slot.filled{border-style:solid;border-color:var(--accent);background:var(--lav)}
+.signs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.signs button,.btn{font:inherit;font-weight:800;cursor:pointer;border-radius:12px}
+.signs button{width:58px;height:48px;font-size:26px;border:1.5px solid var(--line);background:var(--sky);color:var(--ink)}
+.signs button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{border:none;background:var(--accent);color:var(--accent-ink);padding:10px 18px;font-size:16px}
+.btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.fb{border-radius:12px;padding:10px 14px;font-weight:600}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.cmp.ok{border-color:var(--good)} .cmp.no{border-color:var(--bad)}
+.score{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:14px 18px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.score .val{font-family:var(--display);font-size:24px;font-weight:700}
+
+/* number line */
+.nl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:8px}
+.nl svg{display:block;width:100%;min-width:340px;height:auto}
+.nl text{fill:var(--ink);font-family:var(--body);font-size:14px;font-weight:700}
+.nl .axis{stroke:var(--muted);stroke-width:2}
+.nl .tick{stroke:var(--muted);stroke-width:2}
+.nl .pa{fill:var(--accent)} .nl .pb{fill:var(--bad)}
+.nl .ta{fill:var(--accent)} .nl .tb{fill:var(--bad)}
+
+/* solutions */
+.sol{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;display:grid;gap:12px}
+.sol .steps{display:grid;gap:10px}
+.answer{background:var(--good-bg);color:var(--good);border-radius:12px;padding:10px 14px;font-weight:800;font-size:19px}
+.next-row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+.parts{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+.pcol{display:grid;justify-items:center;gap:6px}
+.pd{font-size:48px;font-weight:800;min-width:72px;height:80px;display:grid;place-items:center;border-radius:14px;font-variant-numeric:tabular-nums}
+.int .pd{background:var(--sky);color:var(--accent)}
+.ten .pd{background:var(--lav);color:var(--accent)}
+.com .pd{min-width:18px}
+.pl{font-size:14px;font-weight:700;color:var(--muted)}
+.grid-wrap{overflow-x:auto}
+.dg{border-collapse:separate;border-spacing:4px;margin:0 auto}
+.dg th{font-size:13px;font-weight:700;color:var(--muted);padding:0 6px}
+.dg td{font-size:32px;font-weight:800;text-align:center;min-width:56px;height:56px;border-radius:10px;font-variant-numeric:tabular-nums;transition:background .2s}
+.dg td[data-c]{background:var(--surface);border:1.5px solid var(--line)}
+.dg td.hl{background:var(--sun);color:var(--sun-ink);border-color:var(--sun-ink)}
+.dg td.z{color:var(--accent)}
+.btn.ghost.on{background:var(--accent);color:var(--accent-ink)}
+.nl .small{font-size:11px;font-weight:600;fill:var(--muted)}
+.nl .minor{stroke:var(--muted);stroke-width:1.5}
+footer{margin-top:36px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;font-family:var(--display);font-style:italic}
+@media (max-width:480px){body{font-size:16px}.cmp .pair{font-size:22px}.sign-table .s{font-size:28px}}
+@media (prefers-reduced-motion:no-preference){.fb,.sol .step{animation:in .25s ease}@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+
+<div class="wrap">
+  <header class="book">
+    <h1>Сравнение чисел</h1>
+    <div class="author">Автор — <b>Сусанна Лерниковна Ованнисян</b></div>
+    <div class="task-src"><span class="lbl">Упражнение 3.</span> Сравните числа:
+      1)&nbsp;12,6 и 12,58; &nbsp;2)&nbsp;<span class="fr"><span>11</span><span>12</span></span> и <span class="fr"><span>8</span><span>9</span></span>; &nbsp;3)&nbsp;43 и −76; &nbsp;4)&nbsp;−0,54 и −0,6.</div>
+  </header>
+
+  <nav id="menu" aria-label="Разделы урока">
+    <button data-go="start">1. Знаки</button>
+    <button data-go="decimal">2. Десятичные дроби</button>
+    <button data-go="fractions">3. Обыкновенные дроби</button>
+    <button data-go="negative">4. Числа с минусом</button>
+    <button data-go="practice">5. Реши сам</button>
+    <button data-go="solution">6. Решение по шагам</button>
+  </nav>
+
+  <!-- 1 -->
+  <section id="start">
+    <h2>Как сравнивать числа</h2>
+    <p>Здесь ты научишься решать упражнение 3 самостоятельно. Сначала на похожих примерах показано, как это делается, и объяснено, почему так. Смотри внимательно, а потом сделай такое же задание сам.</p>
+    <div class="rule"><div class="tag">Смотри, как легко запомнить</div>
+      <p>Знак похож на открытый рот. Он всегда открыт к большему числу, а острым концом смотрит на меньшее. Посмотри сюда:</p>
+      <p class="big">9 &gt; 4 &nbsp;&nbsp;&nbsp; 2 &lt; 7 &nbsp;&nbsp;&nbsp; 5 = 5</p>
+      <p>В записи 9 &gt; 4 рот открыт к девятке, потому что 9 больше. В записи 2 &lt; 7 рот открыт к семёрке.</p>
+    </div>
+    <p>В упражнении 3 четыре пары чисел, и каждая пара особенная. Здесь для тебя разобраны три правила, а потом ты будешь решать упражнение сам:</p>
+    <div class="example">
+      <div class="step"><div class="n">1</div><p><b>Десятичные дроби</b> — пара 12,6 и 12,58.</p></div>
+      <div class="step"><div class="n">2</div><p><b>Обыкновенные дроби</b> — пара <span class="fr"><span>11</span><span>12</span></span> и <span class="fr"><span>8</span><span>9</span></span>.</p></div>
+      <div class="step"><div class="n">3</div><p><b>Числа с минусом</b> — пары 43 и −76, −0,54 и −0,6.</p></div>
+    </div>
+    <div class="next-row"><span></span><button class="btn" data-go="decimal">Начать: десятичные дроби →</button></div>
+  </section>
+
+  <!-- 2 -->
+  <section id="decimal" hidden>
+    <h2>Сравниваем десятичные дроби</h2>
+    <h3>Из чего состоит десятичная дробь</h3>
+    <p>Посмотри на число 7,3. Запятая делит его на две части.</p>
+    <div class="parts" aria-label="Разбор числа 7,3">
+      <div class="pcol int"><div class="pd">7</div><div class="pl">целая часть</div></div>
+      <div class="pcol com"><div class="pd">,</div><div class="pl">&nbsp;</div></div>
+      <div class="pcol ten"><div class="pd">3</div><div class="pl">десятые</div></div>
+    </div>
+    <div class="rule"><div class="tag">Запомни</div>
+      <p><b>Целая часть</b> — это число до запятой. В числе 7,3 целая часть равна 7: это семь целых, например семь целых яблок.</p>
+      <p><b>Дробная часть</b> — это цифры после запятой. Первая цифра после запятой показывает <b>десятые</b>, вторая — <b>сотые</b>. В числе 7,3 три десятых: одно яблоко разрезали на 10 равных долек и взяли 3 дольки.</p>
+      <p>Читается так: «семь целых три десятых». Число 7,25 читается: «семь целых двадцать пять сотых».</p>
+    </div>
+
+    <h3>Где это число на координатной прямой</h3>
+    <p>Число 7,3 больше, чем 7, но меньше, чем 8. Значит, оно стоит между 7 и 8. Разделим отрезок от 7 до 8 на 10 равных частей: каждая часть — одна десятая. Нажимай на кнопки и смотри, где стоят числа.</p>
+    <div class="nl"><svg id="dline" viewBox="0 0 640 120" role="img" aria-label="Отрезок координатной прямой от 7 до 8, разделённый на десятые"></svg></div>
+    <div class="actions" id="dbtns">
+      <button type="button" class="btn ghost" data-pt="a">Показать 7,3</button>
+      <button type="button" class="btn ghost" data-pt="b">Показать 7,25</button>
+      <button type="button" class="btn ghost" data-pt="ab">Показать оба числа</button>
+    </div>
+    <p class="note" id="dnote">От 7 до точки 7,3 ровно три маленькие части, то есть три десятых.</p>
+
+    <h3>Смотри: сравним 7,3 и 7,25</h3>
+    <p>Запишем числа друг под другом, разряд под разрядом, и будем сравнивать по шагам. Нажимай кнопку «Следующий шаг».</p>
+    <div class="grid-wrap"><table class="dg" aria-label="Сравнение 7,3 и 7,25 по разрядам">
+      <thead><tr><th>целая часть</th><th></th><th>десятые</th><th>сотые</th></tr></thead>
+      <tbody>
+        <tr><td data-c="i">7</td><td>,</td><td data-c="t">3</td><td data-c="h" id="dzero"></td></tr>
+        <tr><td data-c="i">7</td><td>,</td><td data-c="t">2</td><td data-c="h">5</td></tr>
+      </tbody>
+    </table></div>
+    <div class="example" id="dsteps">
+      <div class="step"><div class="n">1</div><p>Сначала я сравниваю <b>целые части</b>: 7 и 7. Они равны. Значит, пока непонятно, какое число больше, и я иду дальше.</p></div>
+      <div class="step" hidden><div class="n">2</div><p>У числа 7,3 одна цифра после запятой, а у числа 7,25 — две. Я дописываю к 7,3 ноль в разряд сотых: 7,3 = 7,30. Число от этого не меняется: 3 десятых — это то же самое, что 30 сотых.</p></div>
+      <div class="step" hidden><div class="n">3</div><p>Теперь сравниваю цифры после запятой: 30 и 25. Число 30 больше, чем 25. Можно сравнить и по разрядам: 3 десятых больше, чем 2 десятых.</p></div>
+      <div class="step" hidden><div class="n">4</div><p>Значит, первое число больше: <b>7,3 &gt; 7,25</b>. На координатной прямой 7,3 тоже стоит правее.</p></div>
+      <div class="actions"><button type="button" class="btn" id="dnext">Следующий шаг</button><button type="button" class="btn ghost" id="dagain" hidden>Посмотреть ещё раз</button></div>
+    </div>
+    <div class="warn"><b>Будь внимателен!</b> Не смотри на то, какое число «длиннее». В числе 7,25 больше цифр, но оно меньше, чем 7,3. Многие ребята здесь ошибаются, а ты теперь знаешь, как правильно.</div>
+    <div class="rule"><div class="tag">Запомни порядок действий</div>
+      <div class="step"><div class="n">1</div><p>Сравни целые части. У кого целая часть больше, то число и больше.</p></div>
+      <div class="step"><div class="n">2</div><p>Если целые части равны, допиши нули, чтобы цифр после запятой стало поровну.</p></div>
+      <div class="step"><div class="n">3</div><p>Сравни цифры после запятой как обычные числа.</p></div>
+    </div>
+    <h3>Теперь ты сам</h3>
+    <p>Сделай так же, как показано выше. Если не получится, нажми «Проверить», и появится подсказка.</p>
+    <div class="cmp" data-ans=">" data-hint="Допиши ноль: 3,40 и 3,39. Теперь сравни 40 и 39."><div class="head"><span class="num">Задание</span></div><div class="pair"><span>3,4</span><span class="slot"></span><span>3,39</span></div></div>
+    <div class="cmp" data-ans="<" data-hint="Допиши ноль: 0,70 и 0,71. Теперь сравни 70 и 71."><div class="head"><span class="num">Задание</span></div><div class="pair"><span>0,7</span><span class="slot"></span><span>0,71</span></div></div>
+    <div class="cmp" data-ans="=" data-hint="Допиши ноль: 5,10 и 5,10. Получились одинаковые числа."><div class="head"><span class="num">Задание</span></div><div class="pair"><span>5,1</span><span class="slot"></span><span>5,10</span></div></div>
+    <div class="next-row"><button class="btn ghost" data-go="start">← Назад</button><button class="btn" data-go="fractions">Идём дальше: обыкновенные дроби →</button></div>
+  </section>
+
+  <!-- 3 -->
+  <section id="fractions" hidden>
+    <h2>Сравниваем обыкновенные дроби</h2>
+    <p>Давай начнём с лёгкого случая, а потом разберём трудный.</p>
+    <div class="rule"><div class="tag">Лёгкий случай: знаменатели одинаковые</div>
+      <p>Смотри: <span class="fr"><span>5</span><span>7</span></span> и <span class="fr"><span>3</span><span>7</span></span>. Внизу одинаковые числа, значит, пирог разрезан на одинаковые кусочки. В первой дроби 5 кусочков, во второй 3. Пять кусочков больше, чем три:</p>
+      <p class="big" style="text-align:center"><span class="fr"><span>5</span><span>7</span></span> &gt; <span class="fr"><span>3</span><span>7</span></span></p>
+      <p>Запомни: если знаменатели одинаковые, больше та дробь, у которой больше числитель.</p>
+    </div>
+    <p>А что делать, если знаменатели разные? Тогда кусочки разного размера, и сравнивать сразу нельзя. Сейчас я покажу, как я это делаю.</p>
+    <div class="example">
+      <h3 style="margin:0">Смотри: сравним <span class="fr"><span>2</span><span>3</span></span> и <span class="fr"><span>3</span><span>4</span></span></h3>
+      <div class="step"><div class="n">1</div><p>Знаменатели разные: 3 и 4. Я ищу <b>общий знаменатель</b> — число, которое делится и на 3, и на 4. Это 12.</p></div>
+      <div class="step"><div class="n">2</div><p>Теперь я узнаю, на сколько умножить каждый знаменатель, чтобы получилось 12: 12 : 3 = 4 и 12 : 4 = 3. Эти числа называются <b>дополнительными множителями</b>.</p></div>
+      <div class="step"><div class="n">3</div><p>Умножаю на них и числитель, и знаменатель: <span class="fr"><span>2</span><span>3</span></span> = <span class="fr"><span>2 · 4</span><span>3 · 4</span></span> = <span class="fr"><span>8</span><span>12</span></span>, &nbsp; <span class="fr"><span>3</span><span>4</span></span> = <span class="fr"><span>3 · 3</span><span>4 · 3</span></span> = <span class="fr"><span>9</span><span>12</span></span></p></div>
+      <div class="step"><div class="n">4</div><p>Теперь знаменатели одинаковые, и это лёгкий случай. 8 меньше, чем 9, значит <span class="fr"><span>8</span><span>12</span></span> &lt; <span class="fr"><span>9</span><span>12</span></span>.</p></div>
+      <p class="big" style="text-align:center"><span class="fr"><span>2</span><span>3</span></span> &lt; <span class="fr"><span>3</span><span>4</span></span></p>
+    </div>
+    <div class="rule"><div class="tag">Почему так можно?</div>
+      <p>Если умножить и числитель, и знаменатель на одно и то же число, дробь не меняется. <span class="fr"><span>2</span><span>3</span></span> и <span class="fr"><span>8</span><span>12</span></span> — это одна и та же часть пирога, просто разрезанная на более мелкие кусочки.</p>
+    </div>
+    <div class="rule"><div class="tag">А вот мой секретный способ</div>
+      <p>Если обе дроби почти равны единице, посмотри, <b>сколько каждой не хватает до целого</b>. Чем меньше не хватает, тем дробь больше.</p>
+      <p>Смотри: <span class="fr"><span>4</span><span>5</span></span> не хватает <span class="fr"><span>1</span><span>5</span></span>, а <span class="fr"><span>6</span><span>7</span></span> не хватает <span class="fr"><span>1</span><span>7</span></span>. Кусочек <span class="fr"><span>1</span><span>7</span></span> меньше, чем <span class="fr"><span>1</span><span>5</span></span>, значит <span class="fr"><span>6</span><span>7</span></span> &gt; <span class="fr"><span>4</span><span>5</span></span>.</p>
+    </div>
+    <h3>Теперь ты сам</h3>
+    <p>Сделай так же, как я показал: найди общий знаменатель и сравни числители.</p>
+    <div class="cmp" data-ans=">" data-hint="Общий знаменатель 8. 3/4 = 6/8. Теперь сравни 6/8 и 5/8."><div class="head"><span class="num">Задание</span></div><div class="pair"><span class="fr"><span>3</span><span>4</span></span><span class="slot"></span><span class="fr"><span>5</span><span>8</span></span></div></div>
+    <div class="cmp" data-ans="<" data-hint="Общий знаменатель 15. 1/3 = 5/15, 2/5 = 6/15. Теперь сравни 5/15 и 6/15."><div class="head"><span class="num">Задание</span></div><div class="pair"><span class="fr"><span>1</span><span>3</span></span><span class="slot"></span><span class="fr"><span>2</span><span>5</span></span></div></div>
+    <div class="next-row"><button class="btn ghost" data-go="decimal">← Назад</button><button class="btn" data-go="negative">Идём дальше: числа с минусом →</button></div>
+  </section>
+
+  <!-- 4 -->
+  <section id="negative" hidden>
+    <h2>Сравниваем числа с минусом</h2>
+    <p>Числа с минусом называются <b>отрицательными</b>, а числа больше нуля — <b>положительными</b>. Смотри сюда: все числа живут на координатной прямой.</p>
+    <div class="nl"><svg viewBox="0 0 640 90" role="img" aria-label="Координатная прямая от минус пяти до пяти">
+      <line class="axis" x1="20" y1="40" x2="620" y2="40"/><path d="M620 40 l-10 -6 v12z" fill="currentColor" style="fill:var(--muted)"/>
+      <g id="ticks"></g>
+      <text x="40" y="80" style="font-size:13px;font-weight:600">← меньше</text>
+      <text x="530" y="80" style="font-size:13px;font-weight:600">больше →</text>
+    </svg></div>
+    <div class="rule"><div class="tag">Главное, что нужно запомнить</div>
+      <p>Чем <b>правее</b> число на прямой, тем оно <b>больше</b>. Чем левее, тем меньше.</p>
+    </div>
+    <div class="example">
+      <h3 style="margin:0">Смотри: сравним 5 и −20</h3>
+      <div class="step"><div class="n">1</div><p>Число 5 стоит справа от нуля, а −20 — слева от нуля, очень далеко.</p></div>
+      <div class="step"><div class="n">2</div><p>5 стоит правее, значит 5 больше. Неважно, что 20 кажется большим числом: с минусом оно меньше нуля.</p></div>
+      <p class="big" style="text-align:center">5 &gt; −20</p>
+      <p>Поэтому запомни: <b>положительное число всегда больше отрицательного</b>.</p>
+    </div>
+    <div class="example">
+      <h3 style="margin:0">А если оба числа с минусом? Подумай о погоде</h3>
+      <p>Утром было −10 градусов, а днём −3 градуса. Когда было теплее? Конечно, днём! Значит, −3 &gt; −10. Видишь: 10 больше, чем 3, а с минусом всё наоборот.</p>
+      <p>Вот как я это проверяю: мысленно убираю минусы и смотрю, какое число получилось меньше. Оно ближе к нулю, а значит, с минусом оно <b>больше</b>.</p>
+    </div>
+    <div class="example">
+      <h3 style="margin:0">Смотри на прямую поближе: −0,7 и −0,65</h3>
+      <div class="nl"><svg viewBox="0 0 640 110" role="img" aria-label="Отрезок прямой от минус единицы до нуля с точками минус 0,7 и минус 0,65">
+        <line class="axis" x1="30" y1="50" x2="610" y2="50"/>
+        <line class="tick" x1="40" y1="42" x2="40" y2="58"/><text x="40" y="82" text-anchor="middle">−1</text>
+        <line class="tick" x1="600" y1="42" x2="600" y2="58"/><text x="600" y="82" text-anchor="middle">0</text>
+        <circle class="pb" cx="208" cy="50" r="8"/><text class="tb" x="196" y="28" text-anchor="middle">−0,7</text>
+        <circle class="pa" cx="236" cy="50" r="8"/><text class="ta" x="252" y="28" text-anchor="middle">−0,65</text>
+        <text x="320" y="104" text-anchor="middle" style="font-size:13px;font-weight:600">−0,65 стоит правее, ближе к нулю</text>
+      </svg></div>
+      <div class="step"><div class="n">1</div><p>Убираю минусы: 0,7 и 0,65. Дописываю ноль: 0,70 и 0,65.</p></div>
+      <div class="step"><div class="n">2</div><p>0,65 меньше, чем 0,70. Значит, −0,65 ближе к нулю и стоит правее.</p></div>
+      <p class="big" style="text-align:center">−0,65 &gt; −0,7</p>
+    </div>
+    <h3>Теперь ты сам</h3>
+    <p>Сделай так же, как я показал. Если хочешь, посмотри на прямую наверху.</p>
+    <div class="cmp" data-ans="<" data-hint="−3 отрицательное, 2 положительное. Положительное всегда больше."><div class="head"><span class="num">Задание</span></div><div class="pair"><span>−3</span><span class="slot"></span><span>2</span></div></div>
+    <div class="cmp" data-ans="<" data-hint="Убери минусы: 7 и 4. Ближе к нулю 4, значит −4 больше, а −7 меньше."><div class="head"><span class="num">Задание</span></div><div class="pair"><span>−7</span><span class="slot"></span><span>−4</span></div></div>
+    <div class="cmp" data-ans=">" data-hint="Убери минусы и допиши ноль: 1,20 и 1,25. Ближе к нулю 1,20, значит −1,2 больше."><div class="head"><span class="num">Задание</span></div><div class="pair"><span>−1,2</span><span class="slot"></span><span>−1,25</span></div></div>
+    <div class="next-row"><button class="btn ghost" data-go="fractions">← Назад</button><button class="btn" data-go="practice">Идём дальше: упражнение 3 →</button></div>
+  </section>
+
+  <!-- 5 -->
+  <section id="practice" hidden>
+    <h2>Теперь ты сам решаешь упражнение 3</h2>
+    <p>Мы с тобой всё разобрали, и ты уже знаешь, как это делается. Теперь реши упражнение из учебника сам. Выбери знак для каждой пары и нажми «Проверить». Если ошибёшься, не расстраивайся: я подскажу, и ты сможешь исправить ответ.</p>
+    <div class="cmp" data-main="1" data-ans=">" data-hint="Вспомни, как мы сравнивали 7,3 и 7,25. Целые части равны (12 и 12). Допиши ноль: 12,60 и 12,58. Сравни 60 и 58."><div class="head"><span class="num">Задание 1</span></div><div class="pair"><span>12,6</span><span class="slot"></span><span>12,58</span></div></div>
+    <div class="cmp" data-main="2" data-ans=">" data-hint="Вспомни, как мы сравнивали 2/3 и 3/4. Общий знаменатель здесь 36: 11/12 = 33/36, 8/9 = 32/36. Сравни числители."><div class="head"><span class="num">Задание 2</span></div><div class="pair"><span class="fr"><span>11</span><span>12</span></span><span class="slot"></span><span class="fr"><span>8</span><span>9</span></span></div></div>
+    <div class="cmp" data-main="3" data-ans=">" data-hint="Вспомни пример 5 и −20. 43 — положительное число, −76 — отрицательное. Какое из них всегда больше?"><div class="head"><span class="num">Задание 3</span></div><div class="pair"><span>43</span><span class="slot"></span><span>−76</span></div></div>
+    <div class="cmp" data-main="4" data-ans=">" data-hint="Вспомни пример −0,7 и −0,65. Убери минусы и допиши ноль: 0,54 и 0,60. Какое число ближе к нулю, то и больше."><div class="head"><span class="num">Задание 4</span></div><div class="pair"><span>−0,54</span><span class="slot"></span><span>−0,6</span></div></div>
+    <div class="score"><div><div class="note">Твой результат</div><div class="val" id="score">0 из 4</div></div><div class="actions"><button class="btn ghost" id="reset">Начать заново</button><button class="btn" data-go="solution">Посмотреть решение</button></div></div>
+  </section>
+
+  <!-- 6 -->
+  <section id="solution" hidden>
+    <h2>Давай разберём вместе</h2>
+    <p>Если что-то не получилось, ничего страшного. Давай решим вместе, шаг за шагом. Открывай шаги по одному. Перед каждым новым шагом попробуй сам догадаться, что будет дальше, а потом посмотри, прав ли ты.</p>
+    <div id="sols"></div>
+    <p>Теперь вернись к заданиям и реши их ещё раз сам, не подглядывая. У тебя обязательно получится!</p>
+    <div class="next-row"><button class="btn ghost" data-go="practice">← Вернуться к заданиям</button></div>
+  </section>
+
+  <footer>Учебные материалы Сусанны Лерниковны Ованнисян · 2026</footer>
+</div>
+
+<script>
+(function(){
+  // menu
+  var ids=["start","decimal","fractions","negative","practice","solution"];
+  function show(id){
+    if(ids.indexOf(id)<0) id="start";
+    ids.forEach(function(s){document.getElementById(s).hidden=(s!==id);});
+    document.querySelectorAll("#menu button").forEach(function(b){b.setAttribute("aria-current",b.dataset.go===id?"true":"false");});
+  }
+  document.addEventListener("click",function(e){
+    var g=e.target.closest("[data-go]"); if(!g) return;
+    if(location.hash!=="#"+g.dataset.go){location.hash=g.dataset.go;} else show(g.dataset.go);
+    window.scrollTo(0,0);
+  });
+  window.addEventListener("hashchange",function(){show(location.hash.slice(1));});
+  show(location.hash.slice(1));
+
+  // ticks on big number line
+  var t=document.getElementById("ticks"),ns="http://www.w3.org/2000/svg",h="";
+  for(var i=-5;i<=5;i++){var x=320+i*56;
+    h+='<line class="tick" x1="'+x+'" y1="32" x2="'+x+'" y2="48"/><text x="'+x+'" y="66" text-anchor="middle">'+(i<0?"−"+(-i):i)+'</text>';}
+  t.innerHTML=h;
+
+
+  // decimal number line 7..8
+  var dl=document.getElementById("dline");
+  function X(v){return 40+(v-7)*560;}
+  function drawLine(which){
+    var h='<line class="axis" x1="25" y1="70" x2="620" y2="70"/>';
+    for(var i=0;i<=10;i++){var x=X(7+i/10),big=(i===0||i===10);
+      h+='<line class="'+(big?'tick':'minor')+'" x1="'+x+'" y1="'+(big?58:62)+'" x2="'+x+'" y2="'+(big?82:78)+'"/>';
+      h+='<text class="'+(big?'':'small')+'" x="'+x+'" y="'+(big?104:98)+'" text-anchor="middle">'+(big?(7+i/10):"7,"+i)+'</text>';}
+    if(which.indexOf("a")>=0){h+='<circle class="pa" cx="'+X(7.3)+'" cy="70" r="9"/><text class="ta" x="'+(X(7.3)+(which==="ab"?18:0))+'" y="42" text-anchor="middle">7,3</text>';}
+    if(which.indexOf("b")>=0){h+='<circle class="pb" cx="'+X(7.25)+'" cy="70" r="9"/><text class="tb" x="'+(X(7.25)-(which==="ab"?22:0))+'" y="42" text-anchor="middle">7,25</text>';}
+    dl.innerHTML=h;
+  }
+  var notes={a:"От 7 до точки 7,3 ровно три маленькие части, то есть три десятых.",
+    b:"Число 7,25 стоит ровно посередине между 7,2 и 7,3: две десятых и ещё половина десятой (5 сотых).",
+    ab:"Видишь? Точка 7,3 стоит правее, чем 7,25. Значит, 7,3 больше."};
+  function pick(w){drawLine(w);document.getElementById("dnote").textContent=notes[w];
+    document.querySelectorAll("#dbtns button").forEach(function(b){b.classList.toggle("on",b.dataset.pt===w);});}
+  document.querySelectorAll("#dbtns button").forEach(function(b){b.addEventListener("click",function(){pick(b.dataset.pt);});});
+  pick("a");
+
+  // decimal step-by-step comparison
+  var dsteps=document.querySelectorAll("#dsteps .step"),dn=document.getElementById("dnext"),dag=document.getElementById("dagain"),dz=document.getElementById("dzero"),ds=0;
+  var hlFor=["i","h","t",""];
+  function dshow(){
+    dsteps.forEach(function(st,i){st.hidden=i>ds;});
+    document.querySelectorAll(".dg td[data-c]").forEach(function(td){td.classList.toggle("hl",td.dataset.c===hlFor[ds]);});
+    if(ds>=1){dz.textContent="0";dz.classList.add("z");}else{dz.textContent="";dz.classList.remove("z");}
+    dn.hidden=ds>=dsteps.length-1;dag.hidden=!dn.hidden;
+  }
+  dn.addEventListener("click",function(){ds++;dshow();});
+  dag.addEventListener("click",function(){ds=0;dshow();});
+  dshow();
+
+  // compare cards
+  var labels={">":"&gt;","<":"&lt;","=":"="};
+  function updateScore(){
+    var ok=document.querySelectorAll('.cmp[data-main].ok').length;
+    document.getElementById("score").textContent=ok+" из 4"+(ok===4?" — отлично!":"");
+  }
+  document.querySelectorAll(".cmp").forEach(function(card){
+    var slot=card.querySelector(".slot"),chosen=null;
+    var signs=document.createElement("div");signs.className="signs";
+    [">","<","="].forEach(function(s){var b=document.createElement("button");b.type="button";b.innerHTML=labels[s];b.setAttribute("aria-label",s===">"?"больше":s==="<"?"меньше":"равно");
+      b.addEventListener("click",function(){chosen=s;slot.innerHTML=labels[s];slot.classList.add("filled");
+        signs.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x===b);});
+        card.classList.remove("ok","no");fb.hidden=true;if(card.dataset.main)updateScore();});
+      signs.appendChild(b);});
+    var act=document.createElement("div");act.className="actions";
+    var check=document.createElement("button");check.type="button";check.className="btn";check.textContent="Проверить";act.appendChild(check);
+    var fb=document.createElement("div");fb.className="fb";fb.hidden=true;
+    card.appendChild(signs);card.appendChild(act);card.appendChild(fb);
+    card._reset=function(){chosen=null;slot.innerHTML="";slot.classList.remove("filled");card.classList.remove("ok","no");fb.hidden=true;signs.querySelectorAll("button").forEach(function(x){x.classList.remove("on");});};
+    check.addEventListener("click",function(){
+      fb.hidden=false;
+      if(!chosen){fb.className="fb no";fb.textContent="Сначала выбери знак: больше, меньше или равно.";return;}
+      if(chosen===card.dataset.ans){card.classList.add("ok");card.classList.remove("no");fb.className="fb ok";fb.textContent="Верно! Молодец, ты всё сделал правильно.";}
+      else{card.classList.add("no");card.classList.remove("ok");fb.className="fb no";
+        fb.innerHTML="Пока не получилось. Давай подумаем вместе: "+card.dataset.hint+(card.dataset.main?' <br><button type="button" class="btn ghost" style="margin-top:8px" data-go="solution">Открыть решение</button>':"");}
+      if(card.dataset.main)updateScore();
+    });
+  });
+  document.getElementById("reset").addEventListener("click",function(){document.querySelectorAll('.cmp[data-main]').forEach(function(c){c._reset();});updateScore();});
+
+  // solutions
+  function fr(a,b){return '<span class="fr"><span>'+a+'</span><span>'+b+'</span></span>';}
+  var data=[
+    {t:"1) 12,6 и 12,58",a:"12,6 &gt; 12,58",s:[
+      "Это десятичные дроби. Сначала сравниваем целые части: 12 и 12. Они равны.",
+      "После запятой у числа 12,6 одна цифра, а у числа 12,58 — две. Дописываем к 12,6 ноль справа: 12,6 = 12,60.",
+      "Сравниваем цифры после запятой: 60 и 58. Число 60 больше, чем 58.",
+      "Значит, 12,60 больше, чем 12,58, то есть 12,6 больше, чем 12,58."]},
+    {t:"2) "+fr(11,12)+" и "+fr(8,9),a:fr(11,12)+" &gt; "+fr(8,9),s:[
+      "Знаменатели разные: 12 и 9. Ищем общий знаменатель — наименьшее число, которое делится и на 12, и на 9. Это 36.",
+      "Дополнительные множители: 36 : 12 = 3 и 36 : 9 = 4.",
+      fr(11,12)+" = "+fr("11 · 3","12 · 3")+" = "+fr(33,36)+", &nbsp; "+fr(8,9)+" = "+fr("8 · 4","9 · 4")+" = "+fr(32,36),
+      "Знаменатели теперь одинаковые. Сравниваем числители: 33 больше, чем 32. Значит, "+fr(33,36)+" &gt; "+fr(32,36)+".",
+      "Проверка хитрым способом: "+fr(11,12)+" не хватает до целого "+fr(1,12)+", а "+fr(8,9)+" не хватает "+fr(1,9)+". Кусочек "+fr(1,12)+" меньше, значит "+fr(11,12)+" ближе к единице и больше."]},
+    {t:"3) 43 и −76",a:"43 &gt; −76",s:[
+      "Число 43 положительное (больше нуля), а число −76 отрицательное (меньше нуля).",
+      "На координатной прямой 43 стоит правее нуля, а −76 — левее нуля.",
+      "Положительное число всегда больше отрицательного. Неважно, что 76 «большое»: с минусом оно меньше нуля."]},
+    {t:"4) −0,54 и −0,6",a:"−0,54 &gt; −0,6",s:[
+      "Оба числа отрицательные. Значит, больше то, которое ближе к нулю.",
+      "Мысленно убираем минусы: получаем 0,54 и 0,6. Дописываем ноль: 0,6 = 0,60.",
+      "Сравниваем: 0,54 меньше, чем 0,60. Значит, число −0,54 ближе к нулю.",
+      "Число, которое ближе к нулю, стоит на прямой правее и поэтому больше. Значит, −0,54 больше, чем −0,6."]}
+  ];
+  var box=document.getElementById("sols");
+  data.forEach(function(d){
+    var el=document.createElement("div");el.className="sol";
+    var html='<h3 style="margin:0">'+d.t+'</h3><div class="steps">';
+    d.s.forEach(function(s,i){html+='<div class="step" hidden><div class="n">'+(i+1)+'</div><p>'+s+'</p></div>';});
+    html+='</div><div class="answer" hidden>Ответ: '+d.a+'</div><div class="actions"><button type="button" class="btn nx">Показать шаг 1</button><button type="button" class="btn ghost all">Показать всё сразу</button></div>';
+    el.innerHTML=html;box.appendChild(el);
+    var steps=el.querySelectorAll(".step"),ans=el.querySelector(".answer"),nx=el.querySelector(".nx"),all=el.querySelector(".all"),k=0;
+    function done(){ans.hidden=false;nx.hidden=true;all.hidden=true;}
+    nx.addEventListener("click",function(){
+      if(k<steps.length){steps[k].hidden=false;k++;nx.textContent=k<steps.length?"Показать шаг "+(k+1):"Показать ответ";}
+      else done();
+    });
+    all.addEventListener("click",function(){steps.forEach(function(s){s.hidden=false;});k=steps.length;done();});
+  });
+  box.style.display="grid";box.style.gap="14px";
+})();
+</script>
