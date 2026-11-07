@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Հավասարումների համակարգեր · 125–127</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@400;600;700&family=Noto+Serif+Armenian:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f6ff; --card:#ffffff; --lav:#ece7fb; --lav2:#d9d0f7; --blue:#3f63d1; --blue2:#e3ebff;
+  --ink:#1f2a44; --muted:#56607a; --ok:#1f9d63; --okbg:#e3f7ec; --bad:#d64545; --badbg:#fde9e9; --hint:#fff6dc;
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#eef2ff 0%,#f6f3ff 100%);color:var(--ink);
+  font-family:"Noto Sans Armenian","Arial",sans-serif;font-size:17px;line-height:1.6;min-height:100vh}
+header{padding:22px 16px 10px;text-align:center}
+h1{font-family:"Noto Serif Armenian","Noto Sans Armenian",serif;font-size:26px;margin:0;color:#2b3a78}
+.sub{color:var(--muted);font-size:15px;margin-top:4px}
+.author{font-size:13px;color:#7a6fb0;margin-top:6px}
+.stars{display:inline-block;margin-top:10px;background:#fff;border:1px solid var(--lav2);border-radius:999px;padding:4px 14px;font-weight:600;font-size:15px}
+nav{position:sticky;top:0;z-index:5;background:rgba(243,246,255,.94);backdrop-filter:blur(6px);
+  display:flex;gap:8px;overflow-x:auto;padding:10px 12px;border-bottom:1px solid var(--lav2)}
+nav a{flex:0 0 auto;text-decoration:none;color:var(--blue);background:#fff;border:1.5px solid var(--lav2);
+  border-radius:999px;padding:7px 15px;font-weight:600;font-size:15px;white-space:nowrap}
+nav a.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+main{max-width:760px;margin:0 auto;padding:16px 12px 60px}
+section{display:none}
+section.on{display:block;animation:fade .25s}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+h2{font-family:"Noto Serif Armenian","Noto Sans Armenian",serif;color:#2b3a78;font-size:22px;margin:6px 0 10px}
+.card{background:var(--card);border-radius:18px;padding:16px;margin:14px 0;box-shadow:0 2px 10px rgba(63,99,209,.08);border:1px solid #e6e9f7}
+.lav{background:var(--lav);border-color:var(--lav2)}
+.howto{background:var(--blue2);border-radius:14px;padding:12px 14px;margin:10px 0;font-size:16px}
+.howto ol{margin:6px 0 0;padding-left:22px}
+.big{font-size:18px;font-weight:600}
+.rule{border-left:5px solid var(--blue);padding-left:12px;margin:10px 0}
+ul.rules{padding-left:0;list-style:none;margin:0}
+ul.rules li{background:#f7f8ff;border-radius:12px;padding:10px 12px;margin:8px 0}
+.ov{text-decoration:overline;text-decoration-thickness:1.5px}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 3px;font-size:.92em;line-height:1.2}
+.fr .nu{border-bottom:1.5px solid currentColor;padding:0 3px}
+.fr .de{padding:0 3px}
+.sys{display:inline-flex;align-items:stretch;gap:6px;margin:6px 0;font-size:19px;font-weight:600}
+.sys .brace{width:14px;flex:0 0 14px;fill:none;stroke:var(--ink);stroke-width:2}
+.sys .eqs{display:flex;flex-direction:column;justify-content:center;gap:4px;padding:2px 0}
+.task{background:#fff;border-radius:18px;padding:14px;margin:16px 0;border:1.5px solid #e3e7f7;box-shadow:0 2px 10px rgba(63,99,209,.07)}
+.task.done{border-color:#9fdcbe}
+.thead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.lb{background:var(--lav);color:#4b3ca0;border-radius:10px;padding:2px 10px;font-weight:700;font-size:17px}
+.step{margin-top:12px;padding:12px;border-radius:14px;background:#f7f8ff;border:1px solid #e7eaf8;animation:fade .25s}
+.step .n{font-size:13px;font-weight:700;color:#7a6fb0;letter-spacing:.3px}
+.step .q{margin:4px 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:inherit;font-size:17px;border:1.5px solid var(--lav2);background:#fff;color:var(--ink);border-radius:12px;padding:8px 14px;cursor:pointer;min-height:44px}
+.opt:hover{border-color:var(--blue)}
+.opt.ok{background:var(--okbg);border-color:var(--ok);color:#13694a;font-weight:600}
+.opt.bad{background:var(--badbg);border-color:var(--bad);color:#9c2a2a;animation:shake .3s}
+.opt:disabled{cursor:default}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.fb{margin-top:8px;border-radius:10px;padding:8px 12px;font-size:16px}
+.fb.hint{background:var(--hint);border:1px solid #f1dd9b}
+.fb.good{background:var(--okbg);color:#13694a}
+.final{margin-top:12px;background:linear-gradient(90deg,#e3f7ec,#eaf1ff);border-radius:14px;padding:12px;font-weight:700;font-size:18px;color:#13694a}
+.final small{display:block;font-weight:400;font-size:15px;color:var(--ink);margin-top:4px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{font:inherit;font-size:15px;font-weight:600;border:none;border-radius:12px;padding:9px 16px;cursor:pointer;min-height:42px}
+.btn.main{background:var(--blue);color:#fff}
+.btn.soft{background:var(--lav);color:#4b3ca0}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.chip{font:inherit;font-size:19px;font-weight:700;min-width:64px;min-height:50px;border-radius:14px;border:2px solid var(--lav2);background:#fff;color:var(--ink);cursor:pointer}
+.chip.sel{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.right{background:var(--okbg);border-color:var(--ok);color:#13694a}
+.chip.wrong{background:var(--badbg);border-color:var(--bad);color:#9c2a2a}
+.sol{margin-top:10px;background:#f7f8ff;border-radius:12px;padding:10px 12px;font-size:16px}
+.sol div{padding:3px 0}
+.hidden{display:none}
+.ex{background:#f7f8ff;border-radius:14px;padding:12px;margin-top:10px}
+.exstep{margin-top:8px;padding:8px 12px;border-radius:10px;background:#fff;border:1px solid #e7eaf8;animation:fade .25s}
+.yes{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
+.bravo{text-align:center;font-size:18px;font-weight:700;color:#4b3ca0;margin-top:20px}
+footer{text-align:center;color:#8a86a8;font-size:13px;padding:10px 0 30px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Հավասարումների համակարգեր</h1>
+  <div class="sub">Մեկ անհայտով համակարգեր · Վարժություններ 125, 126, 127</div>
+  <div class="author">Հեղինակ՝ Սուսաննա Հովհաննիսյան</div>
+  <div class="stars" id="stars">⭐ 0 / 22</div>
+</header>
+<nav id="nav">
+  <a href="#rule" data-s="rule">📘 Կանոն</a>
+  <a href="#ex125" data-s="ex125">125</a>
+  <a href="#ex126" data-s="ex126">126</a>
+  <a href="#ex127" data-s="ex127">127</a>
+  <a href="#repeat" data-s="repeat">🔁 Կրկնենք</a>
+</nav>
+<main>
+
+<!-- ============ ԿԱՆՈՆ ============ -->
+<section id="rule">
+  <div class="howto">
+    <b>Ինչպե՞ս աշխատել այս տետրով</b>
+    <ol>
+      <li>Նախ կարդա այս էջը՝ «Կանոն»։</li>
+      <li>Հետո բացիր 125, 126, 127 վարժությունները և լուծիր քայլ առ քայլ։</li>
+      <li>Վերջում բացիր «Կրկնենք» բաժինը և ինքդ լուծիր նման օրինակներ։</li>
+    </ol>
+  </div>
+
+  <h2>1. Ի՞նչ է համակարգը</h2>
+  <div class="card">
+    <p style="margin-top:0">Երբ մի քանի հավասարում գրված են <b>ձևավոր փակագծով { </b>, դա կոչվում է <b>հավասարումների համակարգ</b>։</p>
+    <div id="demoSys"></div>
+    <p class="rule"><b>Համակարգի լուծումը</b> այն թիվն է, որը <b>միաժամանակ</b> ճիշտ է դարձնում <b>բոլոր</b> հավասարումները։</p>
+    <p style="margin-bottom:0">Փակագիծը { նշանակում է «<b>և</b>». թիվը պետք է բավարարի և՛ առաջին, և՛ երկրորդ հավասարմանը։</p>
+  </div>
+
+  <h2>2. Ինչպե՞ս լուծել՝ 3 քայլ</h2>
+  <div class="card lav">
+    <div class="big">① Գտիր ամենահեշտ հավասարումը և լուծիր այն։</div>
+    <div style="font-size:15px;color:var(--muted)">Սովորաբար դա այն է, որտեղ x-ը առանց աստիճանի է (x, 2x, 3x…)։</div>
+    <div class="big" style="margin-top:10px">② Ստացված թիվը տեղադրիր մյուս հավասարումների մեջ։</div>
+    <div style="font-size:15px;color:var(--muted)">x-ի փոխարեն գրիր այդ թիվը և հաշվիր։</div>
+    <div class="big" style="margin-top:10px">③ Եզրակացություն</div>
+    <div>✅ Եթե <b>բոլոր</b> հավասարումներում ստացվեց ճիշտ հավասարություն՝ այդ թիվը պատասխանն է։</div>
+    <div>❌ Եթե <b>գոնե մեկում</b> սխալ է՝ համակարգը <b>լուծում չունի</b> (գրում ենք ∅)։</div>
+  </div>
+
+  <h2>3. Նայիր, ինչպես եմ ես լուծում</h2>
+  <div class="card">
+    <div><b>Օրինակ 1</b></div>
+    <div id="ex1sys"></div>
+    <div class="ex" id="ex1"></div>
+    <div class="row"><button class="btn main" data-ex="ex1">Հաջորդ քայլը ▶</button><button class="btn soft" data-exr="ex1">↺ Նորից</button></div>
+  </div>
+  <div class="card">
+    <div><b>Օրինակ 2</b></div>
+    <div id="ex2sys"></div>
+    <div class="ex" id="ex2"></div>
+    <div class="row"><button class="btn main" data-ex="ex2">Հաջորդ քայլը ▶</button><button class="btn soft" data-exr="ex2">↺ Նորից</button></div>
+  </div>
+
+  <h2>4. Օգտակար կանոններ</h2>
+  <div class="card">
+    <ul class="rules">
+      <li>🔹 <b>Արտադրյալը հավասար է 0-ի</b>, եթե արտադրիչներից գոնե մեկը հավասար է 0-ի։<br>
+        <span style="color:var(--muted)">x(x + 2) = 0 → x = 0 կամ x + 2 = 0, այսինքն՝ x = −2։</span></li>
+      <li>⚠️ <b>Մի՛ բաժանիր x-ի վրա։</b> Այդպես կկորցնես x = 0 արմատը։<br>
+        <span style="color:var(--muted)">x² = 5x → ճիշտ է այսպես՝ x² − 5x = 0 → x(x − 5) = 0։</span></li>
+      <li>🔹 <b>Բացասական թիվը</b> կենտ աստիճանում բացասական է, զույգ աստիճանում՝ դրական։<br>
+        <span style="color:var(--muted)">(−1)³ = −1, &nbsp;(−2)² = 4</span></li>
+      <li>🔹 <b>Տեղափոխում.</b> երբ թիվը տանում ենք հավասարման մյուս կողմը, նրա նշանը փոխվում է։<br>
+        <span style="color:var(--muted)">x − 3 = −1 → x = −1 + 3 = 2</span></li>
+      <li>🔹 <b>Համեմատություն</b> (երկու կոտորակների հավասարություն)՝ բազմապատկում ենք խաչաձև։<br>
+        <span style="color:var(--muted)" id="propRule"></span></li>
+      <li>🔹 <b>Արմատներ.</b> <span id="rootRule"></span></li>
+      <li>🔹 <b>Քառակուսի հավասարում</b> ax² + bx + c = 0։ Տարբերիչը՝ D = b² − 4ac։ Եթե D &lt; 0, արմատներ չկան։</li>
+    </ul>
+  </div>
+  <div class="bravo">Հիմա անցիր 125 վարժությանը 👉</div>
+</section>
+
+<!-- ============ 125 ============ -->
+<section id="ex125">
+  <h2>Վարժություն 125</h2>
+  <div class="card lav">
+    <div class="big">Ստուգեք, թե 0, −2, 4 և <span id="r3a"></span> թվերից որոնք են համակարգի լուծում։</div>
+  </div>
+  <div class="howto">
+    <b>Ինչպես անել</b>
+    <ol>
+      <li>Վերցրու թիվը։</li>
+      <li>x-ի փոխարեն տեղադրիր այն <b>բոլոր</b> հավասարումների մեջ։</li>
+      <li>Եթե բոլորը ճիշտ են՝ սեղմիր այդ թվի վրա։ Հետո սեղմիր «Ստուգել»։</li>
+    </ol>
+    <div style="font-size:15px;margin-top:4px">💡 Եթե առաջին հավասարումն արդեն սխալ է, մյուսները ստուգել պետք չէ։</div>
+  </div>
+  <div id="list125"></div>
+</section>
+
+<!-- ============ 126 ============ -->
+<section id="ex126">
+  <h2>Վարժություն 126</h2>
+  <div class="card lav"><div class="big">Լուծեք համակարգը։</div></div>
+  <div class="howto">
+    <b>Ինչպես անել</b>
+    <ol>
+      <li>Պատասխանիր յուրաքանչյուր քայլի հարցին։</li>
+      <li>Ճիշտ պատասխանից հետո կբացվի հաջորդ քայլը։</li>
+      <li>Եթե սխալվես՝ կհայտնվի հուշում 💡։ Կարդա այն և փորձիր նորից։</li>
+    </ol>
+  </div>
+  <div id="list126"></div>
+</section>
+
+<!-- ============ 127 ============ -->
+<section id="ex127">
+  <h2>Վարժություն 127</h2>
+  <div class="card lav"><div class="big">Լուծեք համակարգը։</div></div>
+  <div class="howto">Աշխատիր նույն ձևով՝ քայլ առ քայլ։ Չմոռանաս՝ <b>նախ ամենահեշտ հավասարումը</b>, հետո՝ <b>տեղադրում</b>։</div>
+  <div id="list127"></div>
+</section>
+
+<!-- ============ ԿՐԿՆԵՆՔ ============ -->
+<section id="repeat">
+  <h2>🔁 Կրկնենք</h2>
+  <div class="howto">Այս օրինակները նոր են, բայց լուծվում են նույն կանոնով։ Փորձիր ինքդ, առանց հուշման։ Իսկ եթե դժվար լինի՝ հուշումը կօգնի։</div>
+  <div id="listRep"></div>
+  <div class="bravo" id="allDone"></div>
+</section>
+
+</main>
+<footer>Հեղինակ՝ Սուսաննա Հովհաննիսյան</footer>
+
+<script>
+const R = s => `√<span class="ov">${s}</span>`;
+const F = (a,b) => `<span class="fr"><span class="nu">${a}</span><span class="de">${b}</span></span>`;
+const BR = `<svg class="brace" viewBox="0 0 10 100" preserveAspectRatio="none"><path vector-effect="non-scaling-stroke" d="M9,1 C4,1 5,8 5,20 L5,40 C5,47 3,50 1,50 C3,50 5,53 5,60 L5,80 C5,92 4,99 9,99"/></svg>`;
+const SYS = eqs => `<div class="sys">${BR}<div class="eqs">${eqs.map(e=>`<div>${e}</div>`).join('')}</div></div>`;
+const NONE = 'Լուծում չունի (∅)';
+const PRAISE = ['Ապրե՛ս 👍','Ճիշտ է ✓','Հրաշալի է ⭐','Կեցցե՛ս 👏','Շատ լավ է ✓'];
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const shuffle = a => { a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+
+/* ---------- progress ---------- */
+const KEY = 'susanna-hamakarger-125-127';
+let done = new Set();
+try { done = new Set(JSON.parse(localStorage.getItem(KEY) || '[]')); } catch(e) {}
+const TOTAL = 22;
+function save(){ try { localStorage.setItem(KEY, JSON.stringify([...done])); } catch(e) {} }
+function updStars(){
+  document.getElementById('stars').textContent = `⭐ ${done.size} / ${TOTAL}`;
+  const ad = document.getElementById('allDone');
+  ad.textContent = done.size >= TOTAL ? '🎉 Բոլոր առաջադրանքները կատարված են։ Կեցցե՛ս։' : '';
+}
+
+/* ---------- rule page ---------- */
+document.getElementById('demoSys').innerHTML = SYS(['x + 2 = 5','x² = 9']);
+document.getElementById('r3a').innerHTML = R('3');
+document.getElementById('propRule').innerHTML = `${F('x + 1','3')} = ${F('x − 1','2')} → 2(x + 1) = 3(x − 1)`;
+document.getElementById('rootRule').innerHTML = `${R('a')}·${R('a')} = a, &nbsp; ${R('a')} : ${R('b')} = ${R('a : b')}<br><span style="color:var(--muted)">${R('7')}·${R('7')} = 7, &nbsp; ${R('21')} : ${R('3')} = ${R('7')}</span>`;
+
+const EX = {
+  ex1: { sys:['x + 2 = 5','x² = 9'], steps:[
+    '① Ամենահեշտը առաջինն է՝ x + 2 = 5։ Տեղափոխում ենք 2-ը՝ x = 5 − 2, <b>x = 3</b>։',
+    '② Տեղադրում ենք x = 3 երկրորդի մեջ՝ 3² = 9 → 9 = 9 <span class="yes">ճիշտ է ✓</span>',
+    '③ Երկու հավասարումն էլ ճիշտ են։ <b>Պատասխան՝ x = 3</b> 🎉'
+  ]},
+  ex2: { sys:['x + 1 = 4','2x = 10'], steps:[
+    '① Առաջինից՝ x = 4 − 1, <b>x = 3</b>։',
+    '② Տեղադրում ենք երկրորդի մեջ՝ 2·3 = 6, իսկ պետք է լինի 10 → 6 ≠ 10 <span class="no">սխալ է ✗</span>',
+    '③ 3-ը չի բավարարում երկրորդ հավասարմանը։ <b>Պատասխան՝ լուծում չունի (∅)</b>'
+  ]}
+};
+const exPos = {ex1:0, ex2:0};
+function renderEx(id){
+  document.getElementById(id+'sys').innerHTML = SYS(EX[id].sys);
+  document.getElementById(id).innerHTML = EX[id].steps.slice(0,exPos[id]).map(s=>`<div class="exstep">${s}</div>`).join('') || '<span style="color:var(--muted)">Սեղմիր «Հաջորդ քայլը» կոճակը։</span>';
+}
+document.querySelectorAll('[data-ex]').forEach(b=>b.onclick=()=>{ const id=b.dataset.ex; if(exPos[id]<EX[id].steps.length){exPos[id]++; renderEx(id);} });
+document.querySelectorAll('[data-exr]').forEach(b=>b.onclick=()=>{ const id=b.dataset.exr; exPos[id]=0; renderEx(id); });
+renderEx('ex1'); renderEx('ex2');
+
+/* ---------- 125 ---------- */
+const CAND = [['0','0'],['-2','−2'],['4','4'],['r3',R('3')]];
+const T125 = [
+  { lb:'ա', sys:['2x − 7 = 1','3x² − 48 = 0'], ok:['4'],
+    hint:'Սկսիր առաջինից՝ 2x − 7 = 1։ Ո՞ր թվի դեպքում է ճիշտ։',
+    sol:[
+      'x = 0 → 2·0 − 7 = −7 ≠ 1 <span class="no">✗</span>',
+      'x = −2 → 2·(−2) − 7 = −11 ≠ 1 <span class="no">✗</span>',
+      'x = 4 → 2·4 − 7 = 1 <span class="yes">✓</span>, &nbsp;3·16 − 48 = 0 <span class="yes">✓</span> → <b>լուծում է</b>',
+      `x = ${R('3')} → 2${R('3')} − 7 ≠ 1 <span class="no">✗</span>`
+    ]},
+  { lb:'բ', sys:['x³ = 3x','x(x + 2) = 0'], ok:['0'],
+    hint:'Երկրորդից՝ x = 0 կամ x = −2։ Ստուգիր այս երկուսը առաջինում։',
+    sol:[
+      'x = 0 → 0 = 0 <span class="yes">✓</span>, &nbsp;0·2 = 0 <span class="yes">✓</span> → <b>լուծում է</b>',
+      'x = −2 → (−2)³ = −8, իսկ 3·(−2) = −6 → −8 ≠ −6 <span class="no">✗</span>',
+      'x = 4 → 64 ≠ 12 <span class="no">✗</span>',
+      `x = ${R('3')} → առաջինը ճիշտ է, բայց ${R('3')}·(${R('3')} + 2) ≠ 0 <span class="no">✗</span>`
+    ]},
+  { lb:'գ', sys:[`${R('2')}·x = ${R('6')}`,`x² − 2${R('3')}x + 3 = 0`], ok:['r3'],
+    hint:`${R('2')}·x = ${R('6')} → x = ${R('6')} : ${R('2')} = ${R('3')}։`,
+    sol:[
+      `x = 0 → 0 ≠ ${R('6')} <span class="no">✗</span>`,
+      `x = −2 → −2${R('2')} ≠ ${R('6')} <span class="no">✗</span>`,
+      `x = 4 → 4${R('2')} ≠ ${R('6')} <span class="no">✗</span>`,
+      `x = ${R('3')} → ${R('2')}·${R('3')} = ${R('6')} <span class="yes">✓</span>, &nbsp;3 − 2·3 + 3 = 0 <span class="yes">✓</span> → <b>լուծում է</b>`
+    ]},
+  { lb:'դ', sys:['x &lt; 0','x² − 4 = 0','x³ + 2x + 12 = 0'], ok:['-2'],
+    hint:'Առաջին պայմանը՝ x &lt; 0, այսինքն x-ը պետք է բացասական լինի։ Քանի՞ բացասական թիվ կա ցուցակում։',
+    sol:[
+      'x = 0 → 0 &lt; 0 սխալ է <span class="no">✗</span>',
+      'x = −2 → −2 &lt; 0 <span class="yes">✓</span>, &nbsp;4 − 4 = 0 <span class="yes">✓</span>, &nbsp;−8 − 4 + 12 = 0 <span class="yes">✓</span> → <b>լուծում է</b>',
+      'x = 4 → 4 &lt; 0 սխալ է <span class="no">✗</span>',
+      `x = ${R('3')} → դրական թիվ է <span class="no">✗</span>`
+    ]}
+];
+function render125(){
+  const box = document.getElementById('list125'); box.innerHTML='';
+  T125.forEach((t,i)=>{
+    const id='125-'+i;
+    const el=document.createElement('div'); el.className='task'+(done.has(id)?' done':'');
+    el.innerHTML = `<div class="thead"><span class="lb">${t.lb})</span>${SYS(t.sys)}</div>
+      <div class="chips">${CAND.map(c=>`<button class="chip" data-v="${c[0]}">${c[1]}</button>`).join('')}</div>
+      <div class="fbx"></div>
+      <div class="row"><button class="btn main chk">Ստուգել</button><button class="btn soft shw">Ցույց տալ լուծումը</button><button class="btn soft rst">↺ Նորից</button></div>
+      <div class="sol hidden">${t.sol.map(s=>`<div>${s}</div>`).join('')}</div>`;
+    const chips=[...el.querySelectorAll('.chip')], fb=el.querySelector('.fbx');
+    chips.forEach(c=>c.onclick=()=>{ chips.forEach(x=>x.classList.remove('right','wrong')); c.classList.toggle('sel'); fb.innerHTML=''; });
+    el.querySelector('.chk').onclick=()=>{
+      const sel=chips.filter(c=>c.classList.contains('sel')).map(c=>c.dataset.v);
+      if(!sel.length){ fb.innerHTML='<div class="fb hint">Նախ ընտրիր գոնե մեկ թիվ։</div>'; return; }
+      const right = sel.length===t.ok.length && sel.every(v=>t.ok.includes(v));
+      chips.forEach(c=>{ if(c.classList.contains('sel')){ c.classList.remove('sel'); c.classList.add(t.ok.includes(c.dataset.v)?'right':'wrong'); }});
+      if(right){
+        fb.innerHTML=`<div class="final">🎉 ${pick(PRAISE)} Պատասխան՝ ${CAND.find(c=>c[0]===t.ok[0])[1]}</div>`;
+        el.querySelector('.sol').classList.remove('hidden');
+        done.add(id); save(); updStars(); el.classList.add('done');
+      } else {
+        fb.innerHTML=`<div class="fb hint">Դեռ ոչ 🙂 💡 ${t.hint}</div>`;
+        chips.forEach(c=>{ if(c.classList.contains('right')) c.classList.add('sel'); });
+      }
+    };
+    el.querySelector('.shw').onclick=()=>el.querySelector('.sol').classList.toggle('hidden');
+    el.querySelector('.rst').onclick=()=>{ chips.forEach(c=>c.classList.remove('sel','right','wrong')); fb.innerHTML=''; el.querySelector('.sol').classList.add('hidden'); };
+    box.appendChild(el);
+  });
+}
+
+/* ---------- step tasks (first option is correct) ---------- */
+const YES = 'Ճիշտ է', NO = 'Սխալ է';
+const T126 = [
+  { lb:'ա', sys:['3x = 2(x + 1)','x − 2 = 0'], ans:'x = 2', steps:[
+    {q:'Սկսենք ամենահեշտից՝ x − 2 = 0։ Ինչի՞ է հավասար x-ը։', o:['x = 2','x = −2','x = 0'], h:'Տեղափոխիր −2-ը աջ կողմ՝ նշանը փոխելով. x = 0 + 2։'},
+    {q:'Տեղադրիր x = 2 առաջին հավասարման մեջ՝ 3·2 = 2·(2 + 1)։ Ճի՞շտ է։', o:[YES+'՝ 6 = 6',NO], h:'Ձախ կողմը՝ 3·2 = 6, աջ կողմը՝ 2·3 = 6։'},
+    {q:'Ո՞րն է համակարգի պատասխանը։', o:['x = 2','x = 3',NONE], h:'x = 2-ը ճիշտ դարձրեց երկու հավասարումն էլ։'}
+  ]},
+  { lb:'բ', sys:['3 − x = 0','x + 1,5 = 1,5x'], ans:'x = 3', steps:[
+    {q:'Ամենահեշտը առաջինն է՝ 3 − x = 0։ x = ?', o:['x = 3','x = −3','x = 0'], h:'3-ից ո՞ր թիվը հանենք, որ ստացվի 0։'},
+    {q:'Տեղադրիր x = 3 երկրորդի մեջ՝ 3 + 1,5 = 1,5·3։ Ճի՞շտ է։', o:[YES+'՝ 4,5 = 4,5',NO], h:'3 + 1,5 = 4,5, իսկ 1,5·3 = 4,5։'},
+    {q:'Ո՞րն է պատասխանը։', o:['x = 3','x = 1,5',NONE], h:'3-ը բավարարում է երկու հավասարմանն էլ։'}
+  ]},
+  { lb:'գ', sys:['x + 1 = 7','2x − 1 = 29'], ans:NONE, why:'Առաջինից x = 6, երկրորդից x = 15։ Մեկ թիվը չի կարող լինել և՛ 6, և՛ 15։', steps:[
+    {q:'Առաջինը՝ x + 1 = 7։ x = ?', o:['x = 6','x = 8','x = 7'], h:'x = 7 − 1'},
+    {q:'Տեղադրիր x = 6 երկրորդի մեջ՝ 2·6 − 1 = 29։ Ճի՞շտ է։', o:[NO+'՝ 11 ≠ 29',YES], h:'2·6 − 1 = 12 − 1 = 11։ Իսկ 11-ը 29 չէ։'},
+    {q:'Ո՞րն է պատասխանը։', o:[NONE,'x = 6','x = 15'], h:'6-ը չի բավարարում երկրորդ հավասարմանը, ուրեմն համակարգի լուծում չէ։'}
+  ]},
+  { lb:'դ', sys:['x − 1 = 5','x − 1 = 6','−x + 9 = 3'], ans:NONE, why:'Բավական է, որ գոնե մեկ հավասարում սխալ լինի, և թիվը լուծում չէ։', steps:[
+    {q:'Առաջինը՝ x − 1 = 5։ x = ?', o:['x = 6','x = 4','x = 5'], h:'x = 5 + 1'},
+    {q:'Տեղադրիր x = 6 երկրորդի մեջ՝ 6 − 1 = 6։ Ճի՞շտ է։', o:[NO+'՝ 5 ≠ 6',YES], h:'6 − 1 = 5։ Իսկ 5-ը 6 չէ։'},
+    {q:'Ո՞րն է պատասխանը։', o:[NONE,'x = 6','x = 7'], h:'Մեկ հավասարումն արդեն սխալ է։'}
+  ]},
+  { lb:'ե', sys:['x<sup>5</sup> − 3x<sup>3</sup> = 8','x − 3 = −1'], ans:'x = 2', steps:[
+    {q:'Ամենահեշտը երկրորդն է՝ x − 3 = −1։ x = ?', o:['x = 2','x = −4','x = 4'], h:'Տեղափոխիր −3-ը աջ կողմ՝ x = −1 + 3։'},
+    {q:'Տեղադրիր x = 2 առաջինի մեջ՝ 2<sup>5</sup> − 3·2<sup>3</sup> = ?', o:['8','0','16'], h:'2<sup>5</sup> = 32, 2<sup>3</sup> = 8, 3·8 = 24։ 32 − 24 = ?'},
+    {q:'8 = 8։ Ո՞րն է պատասխանը։', o:['x = 2','x = −2',NONE], h:'2-ը բավարարում է երկու հավասարմանն էլ։'}
+  ]},
+  { lb:'զ', sys:['x² = 5x','x(x + 1)(x − 5) = 0'], ans:'x = 0, x = 5', steps:[
+    {q:'Առաջինը՝ x² = 5x։ Տեղափոխենք՝ x² − 5x = 0, ապա x(x − 5) = 0։ Որո՞նք են արմատները։', o:['x = 0 և x = 5','միայն x = 5','x = 0 և x = −5'], h:'Արտադրյալը 0 է, եթե x = 0 կամ x − 5 = 0։ ⚠️ Մի՛ բաժանիր x-ի վրա՝ 0-ն կկորչի։'},
+    {q:'Երկրորդը՝ x(x + 1)(x − 5) = 0։ Որո՞նք են արմատները։', o:['0, −1 և 5','0, 1 և 5','միայն 5'], h:'x = 0, &nbsp;x + 1 = 0 → x = −1, &nbsp;x − 5 = 0 → x = 5։'},
+    {q:'Ո՞ր թվերն են երկու ցուցակում էլ։', o:['x = 0 և x = 5','միայն x = −1','միայն x = 0'], h:'Նայիր, թե որ թվերը կրկնվում են երկու ցուցակում։'}
+  ]}
+];
+const T127 = [
+  { lb:'ա', sys:['2x − 1 = x + 2','x² − 8x + 15 = 0'], ans:'x = 3', steps:[
+    {q:'Առաջինը՝ 2x − 1 = x + 2։ x = ?', o:['x = 3','x = 1','x = −3'], h:'x-երը տար ձախ, թվերը՝ աջ. 2x − x = 2 + 1։'},
+    {q:'Տեղադրիր x = 3 երկրորդի մեջ՝ 3² − 8·3 + 15 = ?', o:['0','6','48'], h:'9 − 24 + 15 = ?'},
+    {q:'Ո՞րն է պատասխանը։', o:['x = 3','x = 5',NONE], h:'3-ը բավարարում է երկու հավասարմանն էլ։'}
+  ]},
+  { lb:'բ', sys:[`${F('x + 1','3')} = ${F('x − 1','2')}`,'x² − 2(4x − 8) = 1'], ans:'x = 5', steps:[
+    {q:`Առաջինը համեմատություն է՝ ${F('x + 1','3')} = ${F('x − 1','2')}։ Բազմապատկենք խաչաձև։ Ի՞նչ կստացվի։`, o:['2(x + 1) = 3(x − 1)','3(x + 1) = 2(x − 1)','(x + 1)(x − 1) = 6'], h:'Ձախ համարիչը բազմապատկիր աջ հայտարարով (2-ով), աջ համարիչը՝ ձախ հայտարարով (3-ով)։'},
+    {q:'Բացենք փակագծերը՝ 2x + 2 = 3x − 3։ x = ?', o:['x = 5','x = 1','x = −5'], h:'2 + 3 = 3x − 2x'},
+    {q:'Ստուգենք երկրորդում՝ 5² − 2(4·5 − 8) = ?', o:['1','9','49'], h:'4·5 − 8 = 12, &nbsp;25 − 2·12 = 25 − 24'},
+    {q:'1 = 1։ Ո՞րն է պատասխանը։', o:['x = 5','x = 1',NONE], h:'5-ը բավարարում է երկու հավասարմանն էլ։'}
+  ]},
+  { lb:'գ', sys:['x<sup>5</sup> − 2x<sup>3</sup> = 1','3x + 1 = −2'], ans:'x = −1', steps:[
+    {q:'Ամենահեշտը երկրորդն է՝ 3x + 1 = −2։ x = ?', o:['x = −1','x = 1','x = −3'], h:'3x = −2 − 1 = −3, &nbsp;x = −3 : 3'},
+    {q:'Տեղադրիր առաջինի մեջ՝ (−1)<sup>5</sup> − 2·(−1)<sup>3</sup> = ?', o:['1','−3','3'], h:'Բացասական թիվը կենտ աստիճանում բացասական է՝ (−1)<sup>5</sup> = −1, (−1)<sup>3</sup> = −1։ Ուրեմն՝ −1 − 2·(−1) = −1 + 2։'},
+    {q:'1 = 1։ Ո՞րն է պատասխանը։', o:['x = −1','x = 1',NONE], h:'−1-ը բավարարում է երկու հավասարմանն էլ։'}
+  ]},
+  { lb:'դ', sys:['x<sup>7</sup> − 7x + 6 = 0','x − 1 = 0',`x${R('2')} = ${R('2')}`], ans:'x = 1', steps:[
+    {q:'Ամենահեշտը երկրորդն է՝ x − 1 = 0։ x = ?', o:['x = 1','x = −1','x = 0'], h:'x = 0 + 1'},
+    {q:`Երրորդը՝ x·${R('2')} = ${R('2')}։ x = 1-ի դեպքում ճի՞շտ է։`, o:[YES+`՝ ${R('2')} = ${R('2')}`,NO], h:'1-ով բազմապատկելիս թիվը չի փոխվում։'},
+    {q:'Առաջինը՝ 1<sup>7</sup> − 7·1 + 6 = ?', o:['0','14','−12'], h:'1-ը ցանկացած աստիճանում 1 է։ 1 − 7 + 6 = ?'},
+    {q:'Ո՞րն է պատասխանը։', o:['x = 1','x = −1',NONE], h:'1-ը բավարարում է երեք հավասարմանն էլ։'}
+  ]},
+  { lb:'ե', sys:[`${R('3')}x − ${R('21')} = 0`,`2x² − ${R('7')}x − 7 = 0`], ans:`x = ${R('7')}`, steps:[
+    {q:`Առաջինը՝ ${R('3')}·x = ${R('21')}։ x = ?`, o:[`x = ${R('7')}`,'x = 7',`x = ${R('18')}`], h:`x = ${R('21')} : ${R('3')} = ${R('21 : 3')}`},
+    {q:`Տեղադրիր x = ${R('7')} երկրորդի մեջ՝ 2·(${R('7')})² − ${R('7')}·${R('7')} − 7 = ?`, o:['0','7','14'], h:`(${R('7')})² = 7 և ${R('7')}·${R('7')} = 7։ Ուրեմն՝ 2·7 − 7 − 7 = ?`},
+    {q:'Ո՞րն է պատասխանը։', o:[`x = ${R('7')}`,'x = 7',NONE], h:`${R('7')}-ը բավարարում է երկու հավասարմանն էլ։`}
+  ]},
+  { lb:'զ', sys:['x² − 2x + 7 = 0','x² − 5x + 6 = 0'], ans:NONE, why:'Այլ ձև՝ առաջինի տարբերիչը D = 4 − 28 = −24 &lt; 0, ուրեմն այն ընդհանրապես արմատ չունի։', steps:[
+    {q:'Այստեղ ավելի հեշտ է սկսել երկրորդից՝ x² − 5x + 6 = 0։ Որո՞նք են արմատները։', o:['x = 2 և x = 3','x = −2 և x = −3','x = 1 և x = 6'], h:'Գտիր երկու թիվ, որոնց գումարը 5 է, իսկ արտադրյալը՝ 6 (Վիետի թեորեմ)։'},
+    {q:'Տեղադրիր x = 2 առաջինի մեջ՝ 2² − 2·2 + 7 = ?', o:['7','0','15'], h:'4 − 4 + 7 = ?', a:'7 ≠ 0, ուրեմն 2-ը լուծում չէ։'},
+    {q:'Տեղադրիր x = 3՝ 3² − 2·3 + 7 = ?', o:['10','0','4'], h:'9 − 6 + 7 = ?', a:'10 ≠ 0, ուրեմն 3-ն էլ լուծում չէ։'},
+    {q:'Ո՞րն է պատասխանը։', o:[NONE,'x = 2','x = 3'], h:'Ոչ 2-ը, ոչ էլ 3-ը չեն բավարարում առաջին հավասարմանը։'}
+  ]}
+];
+const TREP = [
+  { lb:'1', sys:['x + 4 = 9','x² = 25'], ans:'x = 5', steps:[
+    {q:'Առաջինից՝ x = ?', o:['x = 5','x = 13','x = −5'], h:'x = 9 − 4'},
+    {q:'5² = 25։ Ճի՞շտ է։', o:[YES,NO], h:'5·5 = 25'},
+    {q:'Պատասխանը՝', o:['x = 5','x = −5',NONE], h:'−5-ը չի բավարարում առաջինին՝ −5 + 4 = −1։'}
+  ]},
+  { lb:'2', sys:['2x = 8','x² − 16 = 0'], ans:'x = 4', steps:[
+    {q:'Առաջինից՝ x = ?', o:['x = 4','x = 16','x = 6'], h:'x = 8 : 2'},
+    {q:'4² − 16 = ?', o:['0','8','32'], h:'16 − 16'},
+    {q:'Պատասխանը՝', o:['x = 4','x = −4',NONE], h:'4-ը բավարարում է երկուսին էլ։'}
+  ]},
+  { lb:'3', sys:['3x = 12','x + 1 = 6'], ans:NONE, steps:[
+    {q:'Առաջինից՝ x = ?', o:['x = 4','x = 9','x = 36'], h:'x = 12 : 3'},
+    {q:'4 + 1 = 6։ Ճի՞շտ է։', o:[NO+'՝ 5 ≠ 6',YES], h:'4 + 1 = 5'},
+    {q:'Պատասխանը՝', o:[NONE,'x = 4','x = 5'], h:'Մեկ հավասարումը սխալ է։'}
+  ]},
+  { lb:'4', sys:['x(x − 3) = 0','x² = 9'], ans:'x = 3', steps:[
+    {q:'Առաջինի արմատները՝', o:['0 և 3','միայն 3','0 և −3'], h:'x = 0 կամ x − 3 = 0'},
+    {q:'Երկրորդի արմատները՝ x² = 9', o:['3 և −3','միայն 3','9'], h:'3² = 9 և (−3)² = 9'},
+    {q:'Ընդհանուր թիվը՝', o:['x = 3','x = 0 և x = 3','x = −3'], h:'Ո՞ր թիվն է երկու ցուցակում էլ։'}
+  ]},
+  { lb:'5', sys:['5 − x = 2','x³ = 27'], ans:'x = 3', steps:[
+    {q:'Առաջինից՝ x = ?', o:['x = 3','x = 7','x = −3'], h:'5-ից ո՞ր թիվը հանենք, որ ստացվի 2։'},
+    {q:'3³ = ?', o:['27','9','6'], h:'3·3·3'},
+    {q:'Պատասխանը՝', o:['x = 3',NONE,'x = 9'], h:'27 = 27՝ ճիշտ է։'}
+  ]},
+  { lb:'6', sys:['x − 4 = 0','x² − 5x + 4 = 0'], ans:'x = 4', steps:[
+    {q:'Առաջինից՝ x = ?', o:['x = 4','x = −4','x = 0'], h:'x = 0 + 4'},
+    {q:'4² − 5·4 + 4 = ?', o:['0','8','−4'], h:'16 − 20 + 4'},
+    {q:'Պատասխանը՝', o:['x = 4','x = 1',NONE], h:'1-ը չի բավարարում առաջինին՝ 1 − 4 ≠ 0։'}
+  ]}
+];
+
+function renderSteps(listId, tasks, prefix){
+  const box=document.getElementById(listId); box.innerHTML='';
+  tasks.forEach((t,i)=>{
+    const id=prefix+'-'+i;
+    const el=document.createElement('div'); el.className='task'+(done.has(id)?' done':'');
+    el.innerHTML=`<div class="thead"><span class="lb">${t.lb})</span>${SYS(t.sys)}${done.has(id)?'<span title="կատարված է">⭐</span>':''}</div>
+      <div class="steps"></div><div class="fin"></div>
+      <div class="row"><button class="btn soft rst">↺ Լուծել նորից</button></div>`;
+    const steps=el.querySelector('.steps'), fin=el.querySelector('.fin');
+    function addStep(k){
+      if(k>=t.steps.length){
+        fin.innerHTML=`<div class="final">🎉 Պատասխան՝ ${t.ans}${t.why?`<small>${t.why}</small>`:''}</div>`;
+        if(!done.has(id)){ done.add(id); save(); updStars(); }
+        el.classList.add('done'); return;
+      }
+      const s=t.steps[k], right=s.o[0];
+      const st=document.createElement('div'); st.className='step';
+      st.innerHTML=`<div class="n">ՔԱՅԼ ${k+1}</div><div class="q">${s.q}</div><div class="opts">${shuffle(s.o).map(o=>`<button class="opt">${o}</button>`).join('')}</div><div class="sfb"></div>`;
+      const sfb=st.querySelector('.sfb');
+      st.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+        const tmp=document.createElement('div'); tmp.innerHTML=right;
+        if(b.innerHTML===tmp.innerHTML){
+          b.classList.add('ok');
+          st.querySelectorAll('.opt').forEach(x=>x.disabled=true);
+          sfb.innerHTML=`<div class="fb good">${s.a?'✓ '+s.a:pick(PRAISE)}</div>`;
+          addStep(k+1);
+        } else {
+          b.classList.add('bad'); b.disabled=true;
+          sfb.innerHTML=`<div class="fb hint">💡 ${s.h}</div>`;
+        }
+      });
+      steps.appendChild(st);
+    }
+    el.querySelector('.rst').onclick=()=>{ steps.innerHTML=''; fin.innerHTML=''; addStep(0); };
+    addStep(0);
+    box.appendChild(el);
+  });
+}
+
+/* ---------- navigation ---------- */
+const SECS=['rule','ex125','ex126','ex127','repeat'];
+function show(){
+  let h=location.hash.replace('#',''); if(!SECS.includes(h)) h='rule';
+  SECS.forEach(s=>document.getElementById(s).classList.toggle('on',s===h));
+  document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.s===h));
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',show);
+
+render125();
+renderSteps('list126',T126,'126');
+renderSteps('list127',T127,'127');
+renderSteps('listRep',TREP,'rep');
+updStars(); show();
+</script>
+</body>
+</html>
