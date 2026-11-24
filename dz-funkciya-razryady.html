@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Домашнее задание. Функция и разряды</title>
+<style>
+/* VOICE: тёплый, спокойный голос учителя
+   IDEA: тетрадь с домашним заданием, которая сама проверяет
+   PICTURE: сами задания — поля ответа и кнопки «Проверить»
+   COLOUR/TYPE: те же синий, лавандовый, жёлтое «Вспомни», PT Sans, как в уроке
+   LAYOUT: вкладки разделов сверху, одна колонка заданий */
+:root{--bg:#f2f5fd;--card:#fff;--blue:#3f63d1;--blue2:#e7edff;--lav:#7c6fd6;--lav2:#efecff;--green:#1f8a57;--green2:#e2f6eb;--orange:#a8600c;--yel:#fff8e1;--yelb:#f0d48a;--red:#c93a3a;--red2:#fde9e9;--text:#1d2742;--muted:#5a6681;--line:#d9e0f0;--head:#25356b}
+:root[data-theme=dark]{--bg:#121726;--card:#1b2236;--blue:#6f8ff0;--blue2:#24305a;--lav:#a79cf0;--lav2:#2a2850;--green:#4cc38a;--green2:#173a2a;--orange:#f0b45a;--yel:#352d17;--yelb:#6b5a2a;--red:#ff7b7b;--red2:#3d1e22;--text:#e6eaf5;--muted:#a4adc4;--line:#323c58;--head:#c9d4ff}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--text);font:19px/1.55 "PT Sans","Segoe UI","Noto Sans",Arial,sans-serif;overflow-x:clip}
+header{background:linear-gradient(135deg,var(--blue2),var(--lav2));padding:12px 16px;border-bottom:1px solid var(--line)}
+header h1{margin:0;font-size:21px;color:var(--head);text-wrap:balance}
+.author{font-size:13px;color:var(--muted)}
+nav{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav button{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:5px 12px;font:15px "PT Sans",Arial;cursor:pointer;color:var(--text);line-height:1.2;text-align:left;min-height:44px}
+nav button small{display:block;font-size:13px;color:var(--muted)}
+nav button.on{background:var(--blue);border-color:var(--blue);color:#fff}nav button.on small{color:#dfe6ff}
+.bar{height:6px;background:var(--line)}.bar i{display:block;height:100%;width:0;background:var(--lav);transition:width .3s}
+main{max-width:860px;margin:0 auto;padding:14px 12px 40px}
+.sec{display:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 22px}
+.sec.on{display:block;animation:fi .25s}@keyframes fi{from{opacity:0;transform:translateY(6px)}}
+@media(prefers-reduced-motion:reduce){.sec.on{animation:none}}
+h2{margin:2px 0 10px;font-size:26px;color:var(--head)}
+h3{margin:26px 0 6px;font-size:22px;color:var(--head)}
+.tag{display:inline-block;font:700 13px "PT Sans",Arial;border-radius:10px;padding:2px 10px;color:#fff;background:var(--green);margin-top:18px}
+.rule{background:var(--blue2);border-left:5px solid var(--blue);border-radius:10px;padding:12px 16px;margin:12px 0}
+.rem{background:var(--yel);border:1px solid var(--yelb);border-radius:12px;padding:10px 14px;margin:8px 0 10px}
+.rem b:first-child{color:var(--orange)}
+details.hy{display:inline}details.hy summary{display:inline;list-style:none;cursor:pointer;color:var(--muted);font-size:14px;padding:0 4px}
+details.hy summary::-webkit-details-marker{display:none}details.hy summary::before{content:"▸ հայ."}details.hy[open] summary::before{content:"▾"}
+details.hy[open]{display:block}details.hy .tr{display:block;color:var(--green);font-size:15px;margin-top:2px}
+.q{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:var(--card)}
+.q.ok{background:var(--green2);border-color:var(--green)}
+.q.sol{background:var(--yel);border-color:var(--yelb)}
+.msg{font-size:16px;width:100%}.msg:empty{display:none}.msg.bad{color:var(--red)}.msg.ok{color:var(--green)}.msg.hint{color:var(--orange)}
+input.n{width:84px;font:20px "PT Sans",Arial;padding:6px;border:2px solid var(--line);border-radius:10px;text-align:center;background:var(--card);color:var(--text)}
+input.n.w{width:120px}
+input.n:focus,button:focus-visible{outline:3px solid var(--lav);outline-offset:1px}
+input.n.ok{border-color:var(--green);background:var(--green2)}input.n.bad{border-color:var(--red);background:var(--red2)}
+.btn{font:17px "PT Sans",Arial;cursor:pointer;border-radius:10px;border:1px solid var(--blue);background:var(--blue);color:#fff;padding:9px 18px;min-height:44px}
+.btn.w{background:var(--card);color:var(--blue)}.btn:disabled{opacity:.45;cursor:default}
+.opt{font:19px "PT Sans",Arial;cursor:pointer;border-radius:10px;border:1.5px solid var(--line);background:var(--card);color:var(--text);padding:6px 16px;min-height:44px;min-width:52px}
+.opt.ok{background:var(--green);border-color:var(--green);color:#fff}.opt.bad{background:var(--red);border-color:var(--red);color:#fff;opacity:.8}
+.opts{display:flex;gap:6px;flex-wrap:wrap}
+table.t{border-collapse:collapse;margin:6px 0;font-size:20px}
+table.t td,table.t th{border:1.5px solid var(--line);padding:5px 12px;text-align:center;min-width:52px}
+table.t th{background:var(--blue2)}
+table.t input.n{width:64px;font-size:18px;padding:3px}
+.cmp{font-size:22px;font-weight:700;white-space:nowrap}
+.f{font-weight:700;white-space:nowrap}
+.navrow{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:8px}
+.big{font-size:24px;font-weight:700;color:var(--head)}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px;margin:12px 0}
+.res div{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.res b{display:block;font-size:28px;color:var(--head)}
+pre#rep{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px;font:15px/1.5 "PT Sans",Arial}
+footer{text-align:center;color:var(--muted);font-size:13px;padding:16px}
+@media(max-width:600px){body{font-size:17px}.sec{padding:14px}h2{font-size:22px}table.t{font-size:17px}table.t td,table.t th{padding:4px 6px;min-width:36px}table.t input.n{width:50px}.cmp{font-size:19px;white-space:normal}}
+</style>
+</head>
+<body>
+<header><h1>Домашнее задание. Функция — это правило. Разряды</h1><div class="author">Автор: Сусанна Лерниковна Ованнисян · для Лили · 8 класс</div></header>
+<nav id="nav">
+<button data-t="2">1. Функция<small>20 мин</small></button>
+<button data-t="3">2. Разряды<small>10 мин</small></button>
+<button data-t="4">3. Результат</button>
+</nav>
+<div class="bar"><i id="bar"></i></div>
+<main>
+
+<!-- ===== 3. ФУНКЦИЯ ===== -->
+<section class="sec" data-t="2">
+
+<span class="tag">Задание 1</span>
+<h2>Найди y по правилу</h2>
+<div class="rem"><b>Вспомни:</b> функция — это правило. Даём число x — по правилу получаем одно число y. Чтобы найти y, ставим число вместо x и считаем. <b>2x</b> значит <b>2 · x</b>. Сначала умножение, потом сложение или вычитание.
+<details class="hy"><summary></summary><span class="tr">x-ի փոխարեն դնում ենք թիվը և հաշվում։ 2x նշանակում է 2 · x։ Սկզբում բազմապատկում, հետո գումարում կամ հանում։</span></details></div>
+<div class="q" data-s="f" data-ans="11" data-h1="Вместо x поставь 4: 4 + 7." data-h2="y = 4 + 7 = 11"><span class="t">y = x + 7. При x = 4 &nbsp;y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="15" data-h1="3x значит 3 · x. Посчитай 3 · 5." data-h2="y = 3 · 5 = 15"><span class="t">y = 3x. При x = 5 &nbsp;y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="11" data-h1="Сначала умножение: 2 · 4. Потом прибавь 3." data-h2="2 · 4 = 8, 8 + 3 = 11"><span class="t">y = 2x + 3. При x = 4 &nbsp;y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="13" data-h1="Сначала 3 · 5, потом вычти 2." data-h2="3 · 5 = 15, 15 − 2 = 13"><span class="t">y = 3x − 2. При x = 5 &nbsp;y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="1" data-h1="Любое число, умноженное на 0, равно 0. 3 · 0 = 0. Что дальше?" data-h2="3 · 0 = 0, 0 + 1 = 1"><span class="t">y = 3x + 1. При x = 0 &nbsp;y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 2</span>
+<h2>Обратная задача: найди x</h2>
+<div class="rem"><b>Вспомни:</b> теперь известен y, а x нужно найти. Спроси себя: <b>какое число надо положить в машину, чтобы получилось y?</b> Подбери число и проверь подстановкой.
+<details class="hy"><summary></summary><span class="tr">Այժմ y-ը հայտնի է, պետք է գտնել x-ը։ Ո՞ր թիվը դնենք, որ ստացվի y։ Ընտրիր թիվը և ստուգիր տեղադրելով։</span></details></div>
+<div class="q" data-s="f" data-ans="4" data-h1="Какое число + 6 = 10?" data-h2="4 + 6 = 10, значит x = 4"><span class="t">y = x + 6. Получили y = 10. &nbsp;x =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="7" data-h1="2 · ? = 14. Вспомни таблицу на 2." data-h2="2 · 7 = 14, значит x = 7"><span class="t">y = 2x. Получили y = 14. &nbsp;x =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="8" data-h1="3 · ? = 24. Вспомни таблицу на 3." data-h2="3 · 8 = 24, значит x = 8"><span class="t">y = 3x. Получили y = 24. &nbsp;x =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="4" data-h1="Перед «+ 1» было число 8 (потому что 8 + 1 = 9). А 2 · ? = 8." data-h2="2 · 4 + 1 = 9, значит x = 4"><span class="t">y = 2x + 1. Получили y = 9. &nbsp;x =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 3</span>
+<h2>Заполни пропуски в таблице</h2>
+<div class="rem"><b>Вспомни:</b> в таблице функции верхняя строка — x, нижняя — y. Если пусто внизу — считай y. Если пусто вверху — ищи x, как в задании 2.</div>
+<div class="q" data-s="f" data-n="Таблица y = 3x" data-ans="4|6|15" data-h1="Вверху: 3 · ? = 12. Внизу: y = 3 · 2 и y = 3 · 5." data-h2="3 · 4 = 12, значит x = 4; 3 · 2 = 6; 3 · 5 = 15">
+<span class="f" style="font-size:22px">y = 3x</span>
+<table class="t"><tr><th>x</th><td>1</td><td>2</td><td><input class="n" inputmode="numeric"></td><td>5</td><td>7</td></tr>
+<tr><th>y</th><td>3</td><td><input class="n" inputmode="numeric"></td><td>12</td><td><input class="n" inputmode="numeric"></td><td>21</td></tr></table>
+<p style="margin:0;font-size:15px;color:var(--muted)">Порядок окошек: <span id="ord1"></span></p>
+<button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 4</span>
+<h2>Угадай правило по таблице</h2>
+<div class="rem"><b>Вспомни:</b> посмотри на x = 0 — сразу видно, что прибавляют. Посмотри, на сколько растёт y, когда x растёт на 1, — это число, на которое умножают.</div>
+<div class="q" data-s="f" data-type="ch" data-ans="y = 2x + 1" data-h1="При x = 0 получилось 1. Когда x растёт на 1, y растёт на 2." data-ex="2 · 0 + 1 = 1, 2 · 1 + 1 = 3, 2 · 2 + 1 = 5, 2 · 3 + 1 = 7.">
+<table class="t"><tr><th>x</th><td>0</td><td>1</td><td>2</td><td>3</td></tr><tr><th>y</th><td>1</td><td>3</td><td>5</td><td>7</td></tr></table>
+<div class="opts"><button class="opt" data-v="y = x + 1">y = x + 1</button><button class="opt" data-v="y = 2x + 1">y = 2x + 1</button><button class="opt" data-v="y = 3x">y = 3x</button></div><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-ans="y = 3x + 2" data-h1="При x = 0 получилось 2. y растёт на 3." data-ex="3 · 0 + 2 = 2, 3 · 1 + 2 = 5, 3 · 2 + 2 = 8, 3 · 3 + 2 = 11.">
+<table class="t"><tr><th>x</th><td>0</td><td>1</td><td>2</td><td>3</td></tr><tr><th>y</th><td>2</td><td>5</td><td>8</td><td>11</td></tr></table>
+<div class="opts"><button class="opt" data-v="y = x + 2">y = x + 2</button><button class="opt" data-v="y = 2x + 3">y = 2x + 3</button><button class="opt" data-v="y = 3x + 2">y = 3x + 2</button></div><span class="msg"></span></div>
+
+<span class="tag">Задание 5</span>
+<h2>Сравни значения функций</h2>
+<div class="rem"><b>Вспомни:</b> чтобы сравнить, сначала посчитай оба значения, потом поставь знак. <b>&gt;</b> больше, <b>&lt;</b> меньше, <b>=</b> равно. Острый конец смотрит на меньшее число.
+<details class="hy"><summary></summary><span class="tr">Նախ հաշվիր երկու արժեքները, հետո դիր նշանը։ Սուր ծայրը նայում է փոքր թվին։</span></details></div>
+<p>Две функции: <span class="f">y = x + 5</span> и <span class="f">y = 2x</span>. Что больше при данном x?</p>
+<div class="q" data-s="f" data-type="ch" data-ans="&gt;" data-h1="Посчитай: 2 + 5 = ? и 2 · 2 = ?" data-ex="2 + 5 = 7, 2 · 2 = 4, 7 > 4."><span class="cmp t">x = 2: &nbsp; x + 5 &nbsp;?&nbsp; 2x</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-ans="=" data-h1="Посчитай: 5 + 5 = ? и 2 · 5 = ?" data-ex="5 + 5 = 10, 2 · 5 = 10. Значения равны!"><span class="cmp t">x = 5: &nbsp; x + 5 &nbsp;?&nbsp; 2x</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-ans="&lt;" data-h1="Посчитай: 8 + 5 = ? и 2 · 8 = ?" data-ex="8 + 5 = 13, 2 · 8 = 16, 13 < 16."><span class="cmp t">x = 8: &nbsp; x + 5 &nbsp;?&nbsp; 2x</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="f" data-ans="5" data-h1="Посмотри на три примера выше. Где стоял знак «=»?" data-h2="При x = 5: 5 + 5 = 10 и 2 · 5 = 10"><span class="t">При каком x значения функций y = x + 5 и y = 2x равны? &nbsp;x =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-ans="&lt;" data-h1="Посчитай: 3 · 4 = ? и 2 · 4 + 5 = ?" data-ex="3 · 4 = 12; 2 · 4 + 5 = 8 + 5 = 13; 12 < 13."><span class="cmp t">При x = 4: &nbsp; 3x &nbsp;?&nbsp; 2x + 5</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-ans="&gt;" data-h1="Можно не считать: x стал больше — значит и 3x больше. Или посчитай 3 · 7 и 3 · 6." data-ex="3 · 7 = 21, 3 · 6 = 18. Когда x растёт, y = 3x тоже растёт."><span class="cmp t">y = 3x: &nbsp; y при x = 7 &nbsp;?&nbsp; y при x = 6</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+
+<span class="tag">Задание 6</span>
+<h2>Где выгоднее? Задача из жизни</h2>
+<div class="rem"><b>Вспомни:</b> x — сколько тетрадей купили (выбираем сами), y — сколько рублей заплатили (получается по правилу).</div>
+<div class="rule" style="margin-top:0">Магазин <b>А</b>: тетрадь 20 рублей, доставка бесплатно. &nbsp;<span class="f">y = 20x</span><br>Магазин <b>Б</b>: тетрадь 10 рублей, но доставка 30 рублей. &nbsp;<span class="f">y = 10x + 30</span></div>
+<div class="q" data-s="f" data-n="Магазины, 2 тетради" data-ans="40|50" data-h1="А: 20 · 2. Б: сначала 10 · 2, потом + 30." data-h2="А: 20 · 2 = 40. Б: 10 · 2 + 30 = 20 + 30 = 50"><span class="t">Купили 2 тетради.</span> <span>А: y =</span><input class="n" inputmode="numeric"><span>Б: y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-n="Магазины, 5 тетрадей" data-ans="100|80" data-h1="А: 20 · 5. Б: сначала 10 · 5, потом + 30." data-h2="А: 20 · 5 = 100. Б: 10 · 5 + 30 = 50 + 30 = 80"><span class="t">Купили 5 тетрадей.</span> <span>А: y =</span><input class="n" inputmode="numeric"><span>Б: y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-ans="b" data-h1="Посмотри на свои ответы: для 2 тетрадей дешевле один магазин, для 5 — другой." data-ex="2 тетради: А = 40, Б = 50 — дешевле А. 5 тетрадей: А = 100, Б = 80 — дешевле Б. Доставка «окупается», когда покупаешь много."><span class="t" style="width:100%">Какой вывод верный?</span><div class="opts" style="flex-direction:column;align-items:flex-start"><button class="opt" data-v="a">Магазин А всегда дешевле</button><button class="opt" data-v="b">Мало тетрадей — дешевле А, много тетрадей — дешевле Б</button><button class="opt" data-v="c">Магазин Б всегда дешевле</button></div><span class="msg"></span></div>
+
+<span class="tag">Задание 7</span>
+<h2>Функция или нет?</h2>
+<div class="rem"><b>Вспомни:</b> функция — только если у каждого x <b>один</b> y. Одинаковые y у разных x — можно. Два разных y у одного x — нельзя.</div>
+<div class="q" data-s="f" data-type="ch" data-n="Функция или нет (таблица 1)" data-ans="нет" data-ex="У x = 2 два разных ответа: 5 и 6. Это не функция."><table class="t"><tr><th>x</th><td>1</td><td>2</td><td>2</td><td>3</td></tr><tr><th>y</th><td>4</td><td>5</td><td>6</td><td>7</td></tr></table><div class="opts"><button class="opt" data-v="да">функция</button><button class="opt" data-v="нет">не функция</button></div><span class="msg"></span></div>
+<div class="q" data-s="f" data-type="ch" data-n="Функция или нет (таблица 2)" data-ans="да" data-ex="У каждого x один y. То, что y = 8 три раза, — можно."><table class="t"><tr><th>x</th><td>1</td><td>2</td><td>3</td><td>4</td></tr><tr><th>y</th><td>8</td><td>8</td><td>8</td><td>9</td></tr></table><div class="opts"><button class="opt" data-v="да">функция</button><button class="opt" data-v="нет">не функция</button></div><span class="msg"></span></div>
+
+<span class="tag">Задание 8</span>
+<h2>Найди ошибку ученика</h2>
+<div class="rem"><b>Вспомни:</b> порядок действий — сначала умножение, потом сложение.</div>
+<div class="q" data-s="f" data-type="ch" data-n="Ошибка в y = 3x + 2" data-ans="b" data-h1="Посмотри: что ученик сделал первым — умножил или сложил?" data-ex="Ученик сначала сложил 4 + 2 = 6, потом умножил 3 · 6 = 18. Правильно: 3 · 4 = 12, 12 + 2 = 14."><span class="t" style="width:100%">Задание: y = 3x + 2, найди y при x = 4. Ученик написал: <b>3 · 4 + 2 = 3 · 6 = 18</b>. Что не так?</span><div class="opts" style="flex-direction:column;align-items:flex-start"><button class="opt" data-v="a">Ошибся в таблице умножения</button><button class="opt" data-v="b">Сначала сложил, потом умножил. Правильно y = 14</button><button class="opt" data-v="c">Всё верно, y = 18</button></div><span class="msg"></span></div>
+
+<div class="navrow"><span></span><button class="btn go" data-to="3">Дальше: Разряды ▶</button></div>
+</section>
+
+<!-- ===== 4. РАЗРЯДЫ ===== -->
+<section class="sec" data-t="3">
+<h2>Разряды: как устроено число</h2>
+<div class="rem"><b>Вспомни:</b> каждая цифра стоит в своём разряде. Справа налево: единицы, десятки, сотни, тысячи, десятки тысяч, сотни тысяч.<br>
+<b>58 302</b> = 5 · 10 000 + 8 · 1000 + 3 · 100 + 0 · 10 + 2.<br>Цифра 8 стоит в разряде тысяч — её <b>значение</b> 8000. Ноль показывает: «в этом разряде ничего нет».
+<details class="hy"><summary></summary><span class="tr">Յուրաքանչյուր թվանշան կանգնած է իր կարգում՝ միավորներ, տասնավորներ, հարյուրավորներ, հազարավորներ… Զրոն ցույց է տալիս, որ այդ կարգում ոչինչ չկա։</span></details></div>
+<div class="rule" style="font-size:17px"><table class="t" style="font-size:17px;margin:0"><tr><th>сот. тыс.</th><th>дес. тыс.</th><th>тыс.</th><th>сот.</th><th>дес.</th><th>ед.</th></tr><tr><td></td><td>5</td><td style="background:var(--yel)"><b>8</b></td><td>3</td><td>0</td><td>2</td></tr></table></div>
+
+<span class="tag">Задание 1</span>
+<h3>Что означает цифра?</h3>
+<div class="q" data-s="r" data-ans="8000" data-h1="Посчитай место цифры справа: единицы, десятки, сотни, тысячи…" data-h2="58 302: цифра 8 — в разряде тысяч, значит 8 · 1000 = 8000"><span class="t">В числе 58 302 цифра 8 означает</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-ans="40" data-h1="7 040: справа 0 — единицы, 4 — …?" data-h2="Цифра 4 — в разряде десятков, значит 4 · 10 = 40"><span class="t">В числе 7 040 цифра 4 означает</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-ans="60000" data-h1="В числе 360 512 шесть цифр. Цифра 6 — вторая слева. Какой это разряд?" data-h2="Цифра 6 — в разряде десятков тысяч: 6 · 10 000 = 60 000"><span class="t">В числе 360 512 цифра 6 означает</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 2</span>
+<h3>Разложи число по разрядам</h3>
+<div class="q" data-s="r" data-n="Разложить 6 048" data-ans="0|4" data-h1="Сотен в 6 048 нет — значит там 0." data-h2="6 048 = 6 · 1000 + 0 · 100 + 4 · 10 + 8"><span class="t">6 048 = 6 · 1000 +</span><input class="n" inputmode="numeric"><span>· 100 +</span><input class="n" inputmode="numeric"><span>· 10 + 8</span><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-n="Собрать число" data-ans="40306" data-h1="Запиши по разрядам: дес. тыс. — 4, тыс. — 0, сот. — 3, дес. — 0, ед. — 6." data-h2="4 · 10 000 + 3 · 100 + 6 = 40 306"><span class="t">4 · 10 000 + 3 · 100 + 6 =</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 3</span>
+<h3>Как изменится число?</h3>
+<div class="rem"><b>Вспомни:</b> если цифру в разряде сотен увеличить на 1, число вырастет на 100. В разряде десятков — на 10.</div>
+<div class="q" data-s="r" data-n="4 325: сотни + 2" data-ans="4525|200" data-h1="Цифра сотен 3 станет 3 + 2 = 5. Остальные цифры не меняются." data-h2="4 325 → 4 525. Увеличилось на 2 сотни = 200"><span class="t">В числе 4 325 цифру сотен увеличили на 2. Получилось</span><input class="n w" inputmode="numeric"><span>, число выросло на</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-n="2 718: десятки − 1" data-ans="2708" data-h1="Цифра десятков 1 станет 0. Не забудь ноль!" data-h2="2 718 − 10 = 2 708"><span class="t">В числе 2 718 цифру десятков уменьшили на 1. Получилось</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 4</span>
+<h3>Сравни числа</h3>
+<div class="rem"><b>Вспомни:</b> 1) где цифр больше — то число больше; 2) если цифр поровну — сравнивай слева направо до первой разной цифры.</div>
+<div class="q" data-s="r" data-type="ch" data-ans="&gt;" data-h1="Посчитай цифры в каждом числе." data-ex="В 40 560 пять цифр, в 4 650 — четыре. 40 560 > 4 650."><span class="cmp t">40 560 &nbsp;?&nbsp; 4 650</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="r" data-type="ch" data-ans="&gt;" data-h1="Цифр поровну. Иди слева направо: 7 = 7, 0 = 0, 0 = 0, дальше?" data-ex="Первая разная цифра — в разряде десятков: 8 > 0. 70 080 > 70 008."><span class="cmp t">70 080 &nbsp;?&nbsp; 70 008</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="r" data-type="ch" data-ans="&lt;" data-h1="Цифр поровну. Сравни первые цифры слева." data-ex="Слева 3 = 3, потом 0 < 5. 305 100 < 350 010."><span class="cmp t">305 100 &nbsp;?&nbsp; 350 010</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+<div class="q" data-s="r" data-type="ch" data-ans="&lt;" data-h1="Посчитай цифры. Девятки большие, но сколько их?" data-ex="В 99 999 пять цифр, в 100 000 — шесть. 99 999 < 100 000."><span class="cmp t">99 999 &nbsp;?&nbsp; 100 000</span><div class="opts"><button class="opt" data-v="&lt;">&lt;</button><button class="opt" data-v="&gt;">&gt;</button><button class="opt" data-v="=">=</button></div><span class="msg"></span></div>
+
+<span class="tag">Задание 5</span>
+<h3>Какая цифра спрятана? ⭐</h3>
+<div class="q" data-s="r" data-ans="8" data-h1="Сотни одинаковые (4). Значит, всё решают десятки. Попробуй цифры по очереди: 4_7 должно быть больше 486." data-h2="487 > 486, а 477 < 486. Самая маленькая цифра — 8"><span class="t">4<b>□</b>7 &gt; 486. Самая маленькая цифра вместо □:</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-ans="3" data-h1="Тысячи одинаковые (3). Сравни сотни: □ и 4. Если □ = 4, числа будут равны — а нужно «меньше»." data-h2="3 352 < 3 452, а 3 452 = 3 452. Самая большая цифра — 3"><span class="t">3 <b>□</b>52 &lt; 3 452. Самая большая цифра вместо □:</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<span class="tag">Задание 6</span>
+<h3>Функции и разряды</h3>
+<div class="rem"><b>Вспомни:</b> умножить на 10 — значит приписать справа один ноль: каждая цифра переходит на разряд выше. Умножить на 100 — приписать два нуля.</div>
+<div class="q" data-s="r" data-ans="370" data-h1="37 · 10 — припиши ноль." data-h2="y = 10 · 37 = 370"><span class="t">y = 10x. При x = 37 &nbsp;y =</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-ans="4500" data-h1="45 · 100 — припиши два нуля." data-h2="y = 100 · 45 = 4 500"><span class="t">y = 100x. При x = 45 &nbsp;y =</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-ans="26" data-h1="10 · ? = 260. Какое число, если приписать к нему ноль, даёт 260?" data-h2="10 · 26 = 260, значит x = 26"><span class="t">y = 10x. Получили y = 260. &nbsp;x =</span><input class="n w" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+<div class="q" data-s="r" data-ans="74" data-h1="10 · 7 = 70, потом + 4." data-h2="10 · 7 + 4 = 74 — это 7 десятков и 4 единицы"><span class="t">y = 10a + b — число из a десятков и b единиц. При a = 7, b = 4 &nbsp;y =</span><input class="n" inputmode="numeric"><button class="btn chk">Проверить</button><span class="msg"></span></div>
+
+<div class="navrow"><button class="btn w go" data-to="2">◀ Назад</button><button class="btn go" data-to="4">Дальше: Результат ▶</button></div>
+</section>
+
+<!-- ===== 5. РЕЗУЛЬТАТ ===== -->
+<section class="sec" data-t="4">
+<h2>Твой результат</h2>
+<div class="res" id="resBox"></div>
+<p id="resNote"></p>
+<pre id="rep"></pre>
+<p><button class="btn" id="copy">📋 Скопировать результат для учителя</button> <span id="copyMsg" class="msg ok" style="display:inline"></span></p>
+<p style="font-size:15px;color:var(--muted)">Нажми кнопку и вставь текст в сообщение учителю (WhatsApp, Telegram).</p>
+<div class="navrow"><button class="btn w go" data-to="3">◀ Назад</button><button class="btn w" id="reset">Начать заново</button></div>
+<p id="resetAsk" style="display:none">Все ответы сотрутся. Точно? <button class="btn" id="resetYes">Да, стереть</button> <button class="btn w" id="resetNo">Нет</button></p>
+</section>
+
+</main>
+<footer>© Сусанна Лерниковна Ованнисян · Домашнее задание</footer>
+
+<script>
+{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const KEY='lili_dz_func_v2';
+let S={t:2,q:{}};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const norm=s=>String(s).replace(/[\s ]/g,'').replace(/[−–—]/g,'-').replace(',','.');
+$('#ord1').textContent='сначала верхнее окошко, потом нижние слева направо';
+
+// --- вкладки
+const secs=$$('.sec'),tabs=$$('#nav button');
+function go(t){S.t=t;save();secs.forEach(s=>s.classList.toggle('on',+s.dataset.t===t));tabs.forEach(b=>b.classList.toggle('on',+b.dataset.t===t));if(t===4)report();window.scrollTo(0,0);}
+tabs.forEach(b=>b.onclick=()=>go(+b.dataset.t));
+$$('.go').forEach(b=>b.onclick=()=>go(+b.dataset.to));
+
+// --- задания
+const QS=$$('.q[data-ans]');QS.forEach((q,k)=>q.dataset.k=k);
+const rec=q=>S.q[q.dataset.k]||(S.q[q.dataset.k]={t:0});
+const say=(m,c,t)=>{m.className='msg '+c;m.textContent=t;};
+const label=q=>q.dataset.n||(q.querySelector('.t')?q.querySelector('.t').textContent.replace(/\s+/g,' ').replace(/\s*([xy]\s*)?=\s*$/,'').trim():'задание');
+function finish(q,quiet){const r=rec(q),m=q.querySelector('.msg'),ex=q.dataset.ex?' '+q.dataset.ex:'';
+ q.classList.add(r.s==='sol'?'sol':'ok');q.querySelectorAll('input').forEach(i=>i.disabled=true);q.querySelectorAll('.chk').forEach(b=>b.style.display='none');q.querySelectorAll('.opt').forEach(b=>b.disabled=true);
+ if(q.dataset.type==='ch'){q.querySelectorAll('.opt').forEach(b=>{if(b.dataset.v===q.dataset.ans)b.classList.add('ok');else if((r.p||[]).includes(b.dataset.v))b.classList.add('bad');});
+  say(m,r.s==='sol'?'bad':'ok',(r.s==='ok1'?'✓ Верно!':r.s==='ok2'?'✓ Верно, с подсказкой.':'Правильный ответ отмечен зелёным.')+ex);}
+ else say(m,'ok',r.s==='ok1'?'✓ Верно!':r.s==='ok2'?'✓ Верно, с подсказкой.':'✓ Теперь верно. Посмотри ещё раз на решение: '+q.dataset.h2+'.');
+ progress();}
+function chkIn(q){const r=rec(q);if(r.s)return;const ins=[...q.querySelectorAll('input.n')],ans=q.dataset.ans.split('|'),m=q.querySelector('.msg');
+ r.v=ins.map(i=>i.value);save();
+ if(ins.some(i=>!i.value.trim())){say(m,'hint','Впиши ответ во все окошки.');return;}
+ let ok=true;ins.forEach((i,j)=>{const g=norm(i.value)===norm(ans[j]);i.classList.toggle('ok',g);i.classList.toggle('bad',!g);if(!g)ok=false;});
+ if(ok){r.s=r.sol?'sol':(r.t?'ok2':'ok1');save();finish(q);return;}
+ r.t++;
+ if(r.t===1&&q.dataset.h1)say(m,'hint','Подсказка: '+q.dataset.h1+' Попробуй ещё раз.');
+ else{r.sol=1;say(m,'bad','Решение: '+q.dataset.h2+'. Впиши правильный ответ.');}
+ save();}
+function chkCh(q,o){const r=rec(q);if(r.s||o.disabled)return;const m=q.querySelector('.msg');
+ if(o.dataset.v===q.dataset.ans){r.s=r.t?'ok2':'ok1';save();finish(q);return;}
+ r.t++;(r.p=r.p||[]).push(o.dataset.v);o.classList.add('bad');o.disabled=true;
+ const left=q.querySelectorAll('.opt:not(:disabled)').length;
+ if(r.t===1&&q.dataset.h1&&left>1)say(m,'hint','Подсказка: '+q.dataset.h1+' Попробуй ещё раз.');
+ else{r.s='sol';finish(q);}
+ save();}
+document.addEventListener('click',e=>{const c=e.target.closest('.chk');if(c){chkIn(c.closest('.q'));return;}
+ const o=e.target.closest('.q[data-type=ch] .opt');if(o)chkCh(o.closest('.q'),o);});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('.q[data-ans] input.n'))chkIn(e.target.closest('.q'));});
+document.addEventListener('input',e=>{if(e.target.matches('.q[data-ans] input.n')){const q=e.target.closest('.q');rec(q).v=[...q.querySelectorAll('input.n')].map(i=>i.value);save();}});
+
+// восстановление
+QS.forEach(q=>{const r=S.q[q.dataset.k];if(!r)return;const ins=[...q.querySelectorAll('input.n')];
+ if(r.v)ins.forEach((i,j)=>i.value=r.v[j]||'');
+ if(r.s){if(ins.length)ins.forEach(i=>i.classList.add('ok'));finish(q);}
+ else if(r.p)r.p.forEach(v=>{const b=q.querySelector(`.opt[data-v="${CSS.escape(v)}"]`);if(b){b.classList.add('bad');b.disabled=true;}});});
+
+
+// --- прогресс и отчёт
+function progress(){const done=QS.filter(q=>S.q[q.dataset.k]&&S.q[q.dataset.k].s).length;$('#bar').style.width=(done/QS.length*100)+'%';}
+function part(sec){const list=QS.filter(q=>q.dataset.s===sec);const c={all:list.length,ok1:0,ok2:0,sol:0,no:0,err:[]};
+ list.forEach(q=>{const r=S.q[q.dataset.k];if(!r||!r.s){c.no++;return;}c[r.s]++;if(r.s!=='ok1')c.err.push(label(q)+(r.s==='sol'?' (решение)':' (подсказка)'));});return c;}
+function report(){const f=part('f'),r=part('r');
+ const card=(name,c)=>`<div>${name}<b>${c.ok1} из ${c.all}</b>с первой попытки${c.ok2?`<br>с подсказкой: ${c.ok2}`:''}${c.sol?`<br>по решению: ${c.sol}`:''}${c.no?`<br><span style="color:var(--red)">не сделано: ${c.no}</span>`:''}</div>`;
+ $('#resBox').innerHTML=card('Функция',f)+card('Разряды',r);
+ const left=f.no+r.no;$('#resNote').innerHTML=left?`<span style="color:var(--orange)">Осталось заданий: ${left}. Можно вернуться и доделать.</span>`:'Все задания сделаны. Молодец! 🎉';
+ const ln=(n,c)=>`${n}: с первой попытки ${c.ok1} из ${c.all}, с подсказкой ${c.ok2}, по решению ${c.sol}${c.no?`, не сделано ${c.no}`:''}`+(c.err.length?`\n   Ошибки: ${c.err.join('; ')}`:'');
+ $('#rep').textContent=`Домашнее задание (функция, разряды) — Лили, ${new Date().toLocaleDateString('ru-RU')}
+`+`1) `+ln('Функция',f)+`
+2) `+ln('Разряды',r);}
+$('#copy').onclick=()=>{report();const t=$('#rep').textContent,ok=()=>$('#copyMsg').textContent='Скопировано ✔';
+ const fb=()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok();}catch(e){$('#copyMsg').textContent='Выдели текст выше и скопируй вручную.';}ta.remove();};
+ try{navigator.clipboard.writeText(t).then(ok).catch(fb);}catch(e){fb();}};
+$('#reset').onclick=()=>$('#resetAsk').style.display='block';
+$('#resetNo').onclick=()=>$('#resetAsk').style.display='none';
+$('#resetYes').onclick=()=>{try{localStorage.removeItem(KEY);}catch(e){}location.reload();};
+
+progress();go([2,3,4].includes(S.t)?S.t:2);
+}
+</script>
+</body>
+</html>
