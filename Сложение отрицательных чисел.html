@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Сложение отрицательных чисел</title>
+<style>
+/* VOICE: тёплый репетитор, говорит с учеником на «ты»
+   IDEA: рабочая тетрадь, где число «шагает» по числовой прямой
+   PICTURE: прыжок-дуга по прямой от первого числа к ответу
+   COLOUR and TYPE: светло-голубой фон, лавандовые карточки, синий и фиолетовый акцент; системные шрифты
+   LAYOUT: меню разделов сверху, открыт только один раздел, одна колонка */
+:root{color-scheme:light dark;--bg:light-dark(#eaf1fc,#151a2c);--card:light-dark(#fff,#212741);--ink:light-dark(#1b2142,#e9ecf8);--mute:light-dark(#4b5479,#aab2d2);--lav:light-dark(#ece7fd,#2c2850);--blue:light-dark(#3654d1,#90a7ff);--acc:light-dark(#7a45d8,#c7abff);--ok:light-dark(#17804a,#72dea0);--okb:light-dark(#e3f6ea,#1c3a2c);--bad:light-dark(#bf2d4a,#ff94a8);--badb:light-dark(#fde8ec,#40222c);--line:light-dark(#c8d1ef,#3b4366);--hy:light-dark(#5b9b6c,#93d0a2)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;overflow-x:clip}
+header{padding:28px max(5vw,16px) 14px;max-width:900px;margin:auto}
+h1{font:700 clamp(28px,5vw,40px)/1.1 Georgia,"Times New Roman",serif;margin:0;text-wrap:balance}
+.hyt{color:var(--hy);font-size:15px;margin-top:4px}
+.author{color:var(--mute);font-size:14px;margin-top:6px}
+.prog{margin-top:14px;background:var(--card);border-radius:14px;padding:10px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.bar{flex:1 1 160px;height:12px;background:var(--lav);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--acc));transition:width .4s}
+.star{color:#e0a100;font-weight:700}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:0 max(5vw,16px);max-width:900px;margin:auto}
+nav button{font:inherit;font-size:15px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:22px;padding:9px 15px;min-height:44px;cursor:pointer}
+nav button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+main{max-width:900px;margin:auto;padding:18px max(5vw,16px) 60px}
+.sec[hidden]{display:none}
+h2{font:700 26px/1.2 Georgia,"Times New Roman",serif;margin:6px 0 4px}
+.lead{color:var(--mute);margin:0 0 14px}
+.item,.card{background:var(--card);border-radius:18px;padding:16px 18px;margin-bottom:14px;box-shadow:0 2px 0 var(--line)}
+.item.ok{box-shadow:0 0 0 2px var(--ok)}
+.q{font-size:18px;margin-bottom:10px}
+.pr{color:var(--mute);font-size:13px;opacity:.8}
+details.hy summary{cursor:pointer;color:var(--hy);font-size:13px;list-style:none;display:inline-block;padding:2px 6px}
+details.hy summary::before{content:"▸";}details.hy[open] summary::before{content:"▾"}
+details.hy p{margin:2px 0 0;color:var(--hy);font-size:14px}
+.build{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.bg{display:inline-flex;gap:4px}
+.br,.opt,.yn,.chk{font:700 18px system-ui,Arial,sans-serif;min-height:44px;min-width:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--lav);color:var(--ink);cursor:pointer;padding:6px 12px}
+.br.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.num{font-size:20px;font-weight:700;padding:0 4px}
+select,input{font:16px system-ui,Arial,sans-serif;min-height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:6px 10px}
+input{width:110px}
+.chk{background:var(--blue);color:#fff;border-color:var(--blue);font-size:16px;margin-top:10px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt.good,.yn.good{background:var(--okb);border-color:var(--ok);color:var(--ok)}
+.opt.wrong,.yn.wrong{background:var(--badb);border-color:var(--bad);color:var(--bad)}
+.fb{margin-top:10px;border-radius:12px}
+.fb:empty{display:none}
+.fb.good{background:var(--okb);color:var(--ok);padding:10px 12px}
+.fb.wrong{background:var(--badb);color:var(--ink);padding:10px 12px}
+.fb .steps{font-size:18px;line-height:1.8;margin:6px 0}
+.nl{width:100%;max-width:420px;height:auto;display:block;margin-top:6px}
+.nl .ax{stroke:var(--mute);stroke-width:1.5}.nl .axh{fill:var(--mute)}.nl .tk{stroke:var(--mute)}
+.nl .seg{stroke:var(--blue);stroke-width:5;stroke-linecap:round}
+.nl .cl{fill:var(--blue)}.nl .op{fill:var(--card);stroke:var(--blue);stroke-width:2.5}
+.nl .pt{fill:var(--acc)}.nl text{fill:var(--ink);font:13px system-ui,Arial,sans-serif}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.grid .card{margin:0}
+.card h3{margin:0 0 4px;font:700 18px Georgia,"Times New Roman",serif}
+.rule{background:var(--lav);border-radius:16px;padding:14px 16px;margin-bottom:14px}
+.fx{font-size:20px;font-weight:700;background:var(--lav);display:inline-block;padding:6px 14px;border-radius:12px;margin:4px 0 12px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.sum div{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+textarea{width:100%;min-height:140px;font:14px system-ui,Arial,sans-serif;margin-top:10px}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style></head><body>
+<header>
+<h1>Сложение и вычитание отрицательных чисел</h1>
+<div class="author">Автор: Сусанна Лерниковна Ованнисян</div>
+<div class="prog"><div class="bar"><i id="barI"></i></div><span id="progT">Решено 0</span></div>
+</header>
+<nav id="nav"></nav>
+<main>
+<section class="sec" id="teo">
+<h2>Вспомним правила</h2>
+<p class="lead">Прочитай правила, потом переходи к заданиям в меню.</p>
+<div class="rule"><b>Модуль числа</b> — это число без знака. Модуль −7 равен 7, модуль 7 равен 7.</div>
+<div class="card"><h3>Знаки одинаковые</h3>Модули складываем, знак оставляем тот же.
+<div class="fx">−5 + (−3) = −8</div>
+<div>5 + 3 = 8, оба числа с минусом → ответ −8.</div>
+<div id="j1"></div></div>
+<div class="card"><h3>Знаки разные</h3>Из большего модуля вычитаем меньший, знак берём у числа с большим модулем.
+<div class="fx">−10 + 6 = −4</div><div>10 − 6 = 4, больший модуль у −10 → ответ −4.</div>
+<div class="fx">−2 + 9 = 7</div><div>9 − 2 = 7, больший модуль у 9 → ответ 7.</div>
+<div id="j2"></div></div>
+<div class="card"><h3>Вычитание</h3>Вычитание заменяем сложением с противоположным числом: «минус» перед скобкой и «минус» в скобке дают «плюс».
+<div class="fx">−4 − 7 = −4 + (−7) = −11</div>
+<div class="fx">−6 − (−9) = −6 + 9 = 3</div></div>
+</section>
+
+<section class="sec" id="t1" hidden><h2>1. Знаки одинаковые</h2>
+<p class="lead">Вычисли и нажми «Проверить». Если ошибёшься — я покажу решение по шагам.</p><div id="t1b"></div></section>
+
+<section class="sec" id="t2" hidden><h2>2. Знаки разные</h2>
+<p class="lead">Вычисли. После ответа посмотри, как число «шагает» по прямой.</p><div id="t2b"></div></section>
+
+<section class="sec" id="t3" hidden><h2>3. Угадай знак ответа</h2>
+<p class="lead">Не считай до конца! Только посмотри на модули и выбери, какой будет ответ: плюс, минус или ноль.</p><div id="t3b"></div></section>
+
+<section class="sec" id="t4" hidden><h2>4. Вычитание</h2>
+<p class="lead">Сначала замени вычитание сложением, потом вычисли.</p><div id="t4b"></div></section>
+
+<section class="sec" id="t5" hidden><h2>5. Найди ошибку</h2>
+<p class="lead">Ученик решил примеры. Проверь: верно или неверно?</p><div id="t5b"></div></section>
+
+<section class="sec" id="sum" hidden><h2>Итог</h2>
+<p class="lead">Скопируй результат и отправь учителю.</p>
+<div class="card sum" id="sumB"></div>
+<button class="chk" id="copy">Скопировать результат</button><div id="copyOut"></div></section>
+</main>
+<script>
+{
+const $=s=>document.querySelector(s);
+const fmt=v=>String(v).replace('-','−');
+const par=v=>v<0?`(${fmt(v)})`:fmt(v);
+const LET=i=>String.fromCharCode(1072+i);
+const num=s=>{s=String(s).trim().replace(/[−–]/g,'-').replace(',','.');return s===''?NaN:Number(s)};
+const expr=([a,b,op])=>`${fmt(a)} ${op} ${par(b)}`;
+const calc=([a,b,op])=>op==='+'?a+b:a-b;
+
+function addTxt(a,b){const r=a+b,A=Math.abs(a),B=Math.abs(b);
+ if(a===0||b===0)return`Прибавляем ноль — число не меняется. Ответ: <b>${fmt(r)}</b>.`;
+ if((a<0)===(b<0))return`Знаки одинаковые. Модули складываем: ${A} + ${B} = ${A+B}. Знак оставляем ${a<0?'«минус»':'«плюс»'}. Ответ: <b>${fmt(r)}</b>.`;
+ if(A===B)return`Знаки разные, модули равны: ${A} − ${B} = 0. Ответ: <b>0</b>.`;
+ const big=A>B?a:b;return`Знаки разные. Из большего модуля вычитаем меньший: ${Math.max(A,B)} − ${Math.min(A,B)} = ${Math.abs(A-B)}. Больший модуль у числа ${fmt(big)}, поэтому знак ${big<0?'«минус»':'«плюс»'}. Ответ: <b>${fmt(r)}</b>.`}
+function explain(t){const[a,b,op]=t;if(op==='+')return addTxt(a,b);
+ return`Заменяем вычитание сложением: ${expr(t)} = ${fmt(a)} + ${par(-b)}.<br>`+addTxt(a,-b)}
+
+function jump(a,d){const r=a+d,lo=Math.min(0,a,r)-2,hi=Math.max(0,a,r)+2,W=340,y=46,X=v=>16+(v-lo)/(hi-lo)*(W-32),step=hi-lo>30?5:1;
+ let s=`<svg viewBox="0 0 ${W} 74" class="nl" role="img" aria-label="движение по числовой прямой"><line x1="6" y1="${y}" x2="${W-6}" y2="${y}" class="ax"/><path d="M${W-4} ${y} l-9 -5 v10z" class="axh"/>`;
+ for(let v=Math.ceil(lo);v<=hi;v++)if(v%step===0)s+=`<line x1="${X(v)}" y1="${y-4}" x2="${X(v)}" y2="${y+4}" class="tk"/>`;
+ const lab=new Set([a,r,0]);lab.forEach(v=>{if(v===0&&(Math.abs(a)<2||Math.abs(r)<2)&&a!==0&&r!==0)return;s+=`<text x="${X(v)}" y="${y+22}" text-anchor="middle">${fmt(v)}</text>`});
+ const x1=X(a),x2=X(r),mid=(x1+x2)/2;
+ if(a!==r)s+=`<path d="M${x1} ${y-6} Q${mid} ${y-40} ${x2} ${y-8}" fill="none" stroke="var(--acc)" stroke-width="2.5"/><path d="M${x2} ${y-6} l${x2>x1?-9:9} -5 l${x2>x1?2:-2} 9z" class="pt"/><text x="${mid}" y="${y-30}" text-anchor="middle" style="font-weight:700">${d>0?'+'+d:fmt(d)}</text>`;
+ return s+`<circle cx="${x1}" cy="${y}" r="6" class="cl"/><circle cx="${x2}" cy="${y}" r="6.5" class="pt"/></svg>`}
+$('#j1').innerHTML=jump(-5,-3);$('#j2').innerHTML=jump(-10,6);
+
+const st={};
+const T1=[[-5,-7,'+'],[-12,-8,'+'],[-3,-9,'+'],[-15,-6,'+'],[-20,-11,'+'],[-4,-17,'+']];
+const T2=[[-11,4,'+'],[-6,14,'+'],[9,-16,'+'],[-17,5,'+'],[12,-7,'+'],[-25,25,'+'],[-31,19,'+'],[-8,23,'+']];
+const T3=[[-14,9],[-7,19],[8,-15],[-23,30],[-10,10],[-6,-4],[27,-29],[-45,46]];
+const T4=[[-7,5,'−'],[-9,-4,'−'],[6,11,'−'],[-12,-20,'−'],[3,-8,'−'],[-16,9,'−'],[-5,-5,'−'],[10,-14,'−']];
+const T5=[[-6,10,'+',-4],[-9,-3,'+',-12],[7,-12,'+',5],[-4,6,'−',-10],[-8,-13,'−',-21],[-15,15,'+',0],[-3,-11,'−',8],[14,-20,'+',-6]];
+const TOT={t1:T1.length,t2:T2.length,t3:T3.length,t4:T4.length,t5:T5.length};
+const ALL=Object.values(TOT).reduce((x,y)=>x+y);
+function rec(k,ok){const o=st[k]||(st[k]={tries:0,ok:false,first:false});if(o.ok)return;o.tries++;if(ok){o.ok=true;o.first=o.tries===1}prog()}
+function cnt(t){const v=Object.entries(st).filter(([k])=>k.split('-')[0]===t).map(e=>e[1]);return[v.filter(o=>o.ok).length,v.filter(o=>o.first).length]}
+function prog(){let s=0,f=0;for(const t in TOT){const[a,b]=cnt(t);s+=a;f+=b}$('#barI').style.width=(s/ALL*100)+'%';$('#progT').innerHTML=`Решено ${s} из ${ALL} · <span class="star">★ ${f}</span> с первой попытки`}
+
+const SECS=[['teo','Правила'],['t1','1. Одинаковые знаки'],['t2','2. Разные знаки'],['t3','3. Знак ответа'],['t4','4. Вычитание'],['t5','5. Найди ошибку'],['sum','Итог']];
+$('#nav').innerHTML=SECS.map(([id,t])=>`<button data-go="${id}">${t}</button>`).join('');
+function show(id){document.querySelectorAll('.sec').forEach(s=>s.hidden=s.id!==id);document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.go===id));if(id==='sum')sumR();window.scrollTo({top:0})}
+$('#nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.go)});
+
+/* задания с вводом ответа: 1, 2, 4 */
+function inputTask(id,T,withJump){
+ $('#'+id+'b').innerHTML=T.map((t,i)=>`<div class="item" data-k="${id}-${i}"><div class="q">${LET(i)}) <b>${expr(t)}</b> = ?</div><div class="row"><input aria-label="ответ" inputmode="text"><button class="chk" style="margin:0" data-i="${i}">Проверить</button></div><div class="fb"></div></div>`).join('');
+ $('#'+id+'b').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;const i=+b.dataset.i,t=T[i],it=b.closest('.item'),fb=it.querySelector('.fb'),v=num(it.querySelector('input').value);
+  if(isNaN(v)){fb.className='fb wrong';fb.textContent='Впиши число.';return}
+  const r=calc(t),ok=v===r;rec(id+'-'+i,ok);it.classList.toggle('ok',ok);fb.className='fb '+(ok?'good':'wrong');
+  const pic=withJump?jump(t[0],t[2]==='+'?t[1]:-t[1]):'';
+  fb.innerHTML=ok?`Верно! ${expr(t)} = <b>${fmt(r)}</b>${pic}`:`Пока не так. Давай по шагам:<div class="steps" style="font-size:17px">${explain(t)}</div>${pic}<div>Теперь впиши правильный ответ.</div>`});
+ $('#'+id+'b').addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT')e.target.parentElement.querySelector('.chk').click()});
+}
+inputTask('t1',T1,true);inputTask('t2',T2,true);inputTask('t4',T4,false);
+
+/* 3 */
+const sg=v=>v>0?'+':v<0?'−':'0';
+$('#t3b').innerHTML=T3.map((t,i)=>`<div class="item" data-k="t3-${i}"><div class="q">${LET(i)}) <b>${fmt(t[0])} + ${par(t[1])}</b></div><div class="opts">${['+','−','0'].map(o=>`<button class="yn" data-i="${i}" data-a="${o}">${o==='+'?'плюс':o==='−'?'минус':'ноль'}</button>`).join('')}</div><div class="fb"></div></div>`).join('');
+$('#t3b').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;const i=+b.dataset.i,[a,c]=T3[i],it=b.closest('.item'),fb=it.querySelector('.fb'),r=a+c,ok=b.dataset.a===sg(r);rec('t3-'+i,ok);
+ b.classList.add(ok?'good':'wrong');it.classList.toggle('ok',ok);fb.className='fb '+(ok?'good':'wrong');
+ const A=Math.abs(a),C=Math.abs(c);
+ const why=(a<0)===(c<0)?`Знаки одинаковые — знак ответа тот же: ${sg(a)}.`:A===C?'Модули равны — ответ ноль.':`Знаки разные. Больший модуль у числа ${fmt(A>C?a:c)} — значит, ответ со знаком «${sg(r)}».`;
+ fb.innerHTML=(ok?'Верно! ':'Не так. ')+why+(ok?` Кстати, ответ: ${fmt(r)}.`:' Выбери ещё раз.')});
+
+/* 5 */
+$('#t5b').innerHTML=T5.map((t,i)=>`<div class="item" data-k="t5-${i}"><div class="q">${LET(i)}) <b>${expr(t)} = ${fmt(t[3])}</b></div><div class="opts"><button class="yn" data-i="${i}" data-a="1">Верно</button><button class="yn" data-i="${i}" data-a="0">Неверно</button></div><div class="fb"></div></div>`).join('');
+$('#t5b').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;const i=+b.dataset.i,t=T5[i],it=b.closest('.item'),fb=it.querySelector('.fb'),r=calc(t),right=r===t[3],ok=(b.dataset.a==='1')===right;rec('t5-'+i,ok);
+ b.classList.add(ok?'good':'wrong');it.classList.toggle('ok',ok);fb.className='fb '+(ok?'good':'wrong');
+ fb.innerHTML=(ok?'Правильно! ':'Не так. ')+(right?'Пример решён верно. ':`Пример решён неверно: правильный ответ ${fmt(r)}. `)+`<div class="steps" style="font-size:17px">${explain(t)}</div>`});
+
+/* итог */
+const TN={t1:'1. Знаки одинаковые',t2:'2. Знаки разные',t3:'3. Угадай знак ответа',t4:'4. Вычитание',t5:'5. Найди ошибку'};
+function sumText(){let s=0,f=0,out=['Домашнее задание: сложение и вычитание отрицательных чисел'];for(const t in TOT){const[a,b]=cnt(t);s+=a;f+=b;out.push(`${TN[t]}: ${a} из ${TOT[t]} (с первой попытки ${b})`)}out.push(`Всего: ${s} из ${ALL}, с первой попытки ${f}`);return out}
+function sumR(){$('#sumB').innerHTML=sumText().slice(1).map(x=>{const k=x.lastIndexOf(':');return`<div><span>${x.slice(0,k)}</span><b>${x.slice(k+1)}</b></div>`}).join('')}
+$('#copy').addEventListener('click',async()=>{const t=sumText().join('\n');try{await navigator.clipboard.writeText(t);$('#copyOut').textContent='Скопировано!'}catch(e){$('#copyOut').innerHTML='<textarea readonly></textarea>';$('#copyOut textarea').value=t;$('#copyOut textarea').select()}});
+
+show('teo');prog();
+}
+</script>
+</body></html>
